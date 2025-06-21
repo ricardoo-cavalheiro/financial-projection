@@ -1,0 +1,18 @@
+services:
+  postgres:
+    container_name: 'postgres_container'
+    image: 'postgres:latest'
+    environment:
+      - 'POSTGRES_DB=financial_app'
+      - 'POSTGRES_PASSWORD=changeit'
+      - 'POSTGRES_USER=admin'
+    ports:
+      - '5432:5432'
+  postgres_ui:
+    image: 'dpage/pgadmin4'
+    container_name: 'pgadmin_container'
+    environment:
+      - 'PGADMIN_DEFAULT_EMAIL=email@email.com'
+      - 'PGADMIN_DEFAULT_PASSWORD=changeit'
+    ports:
+      - '5050:80'

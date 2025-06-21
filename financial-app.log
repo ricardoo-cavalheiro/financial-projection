@@ -1,0 +1,29 @@
+1750517490228:help
+1750517497686:clear
+1750517499908:help
+1750517507009:exit
+1750517698351:clear
+1750517699937:help
+1750517726330:create-card --cardName Santander
+1750517736145:clear
+1750517738283:exit
+1750518271953:clear
+1750518273447:help
+1750518279002:create-card help
+1750518285032:clear
+1750518287892:help
+1750518329663:create-card --cardName Santander --limitAmount 2500.00 --closingDay 23 --paymentDay 30
+1750518353992:clear
+1750518357074:create-card --cardName Santander --limitAmount 2500.00 --closingDay 23 --paymentDay 30
+1750518753860:exit
+1750533463595:help
+1750533526340:hep
+1750533549471:help
+1750534370297:create-card
+1750534393270:create-card --cardName "Mercado Pago"
+1750534408353:create-card --cardName "Mercado Pago" --limitAmount 5800
+1750534411621:create-card --cardName "Mercado Pago" --limitAmount "5800"
+1750534438656:create-card --cardName "Mercado Pago" --limitAmount 5800 --paymentDay 22 --closingDay 15
+1750535116480:create-card --cardName "Mercado Pago" --limitAmount 0 --paymentDay 22 --closingDay 15
+1750535134275:create-card --cardName "Mercado Pago" --limitAmount -1 --paymentDay 22 --closingDay 15
+1750535159608:quit
