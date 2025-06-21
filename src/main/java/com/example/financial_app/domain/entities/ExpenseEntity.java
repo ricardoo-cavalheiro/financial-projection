@@ -1,6 +1,9 @@
 package com.example.financial_app.domain.entities;
 
 import java.time.LocalDateTime;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.JdbcType;
+import org.hibernate.dialect.PostgreSQLEnumJdbcType;
 
 import com.example.financial_app.domain.enums.PaymentTypeEnum;
 
@@ -31,6 +34,7 @@ public class ExpenseEntity {
   private Double amount;
 
   @Enumerated(EnumType.STRING)
+  @JdbcType(PostgreSQLEnumJdbcType.class)
   @Column(name = "payment_type", columnDefinition = "expense_kind")
   private PaymentTypeEnum paymentType;
 
@@ -47,6 +51,7 @@ public class ExpenseEntity {
   private Integer currentInstallment;
 
   @Column(name = "created_at")
+  @CreationTimestamp
   private LocalDateTime createdAt;
 
   @ManyToOne

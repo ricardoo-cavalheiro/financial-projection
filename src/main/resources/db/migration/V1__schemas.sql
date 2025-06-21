@@ -6,7 +6,7 @@ CREATE TABLE card (
   payment_day SMALLINT NOT NULL CHECK (payment_day BETWEEN 1 AND 31)
 );
 
-CREATE TYPE expense_kind AS ENUM ('credit', 'debit');
+CREATE TYPE expense_kind AS ENUM ('CREDIT', 'DEBIT');
 
 CREATE TABLE expense (
   id            SERIAL PRIMARY KEY,

@@ -15,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Command(group = "Card", description = "Commands related to card management")
 @RequiredArgsConstructor
-public class CreateCard {
+public class CardService {
   private final ICardRepository cardRepository;
 
   @Command(command = "create-card", description = "Create a new card")
