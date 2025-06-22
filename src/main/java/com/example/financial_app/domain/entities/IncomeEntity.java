@@ -10,9 +10,15 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 @Builder
+@Getter
+@AllArgsConstructor
+@RequiredArgsConstructor
 @Entity(name = "income")
 @Table(name = "income")
 public class IncomeEntity {

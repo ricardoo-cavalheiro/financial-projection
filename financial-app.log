@@ -5,3 +5,24 @@
 1750547609534:add-expense --expenseName Mãe --amount 600 --paymentType debit --isRecurring true --recurrenceDay 1
 1750547772724:add-expense --expenseName Mãe --amount 600 --paymentType DEBIT --isRecurring true --recurrenceDay 1
 1750549264434:add-expense --expenseName Vera --amount 600 --paymentType DEBIT --isRecurring true --recurrenceDay 1
+1750600248740:help
+1750600251947:help add-income
+1750600280081:add-expense help
+1750600307130:add-expense --help
+1750600338786:add-expense help
+1750600824332:help
+1750600829747:lis-expenses
+1750600835275:list-expenses
+1750605128078:add-recurring-expense --expenseName Mãe --amount 600 --paymentType DEBIT --isRecurring true --recurrenceDay 1
+1750605847974:add-debit-expense --expenseName Mãe --amount 600 --isRecurring true --recurrenceDay 1
+1750606582436:add-debit-expense --expenseName Mãe --amount 600 --isRecurring false
+1750607162424:add-debit-expense --expenseName Mãe --amount 600 --isRecurring true 2025-06-01
+1750607175872:add-debit-expense --expenseName Mãe --amount 600 --isRecurring true 2025-07-01
+1750607315564:add-debit-expense --expenseName Mãe --amount 600 --isRecurring false --dueDate 2025-07-01
+1750607682585:add-debit-expense --expenseName Mãe --amount 600 --isRecurring true --dueDate 2025-07-01
+1750611089999:add-recurring-debit-expense --expenseName Mãe --amount 600 --dueDate 2025-07-01
+1750611293544:add-onetime-debit-expense --expenseName Vera --amount 600 --dueDate 2025-07-01
+1750611747052:add-recurring-credit-expense --expenseName Wifi --amount 180 --paymentDate 2025-07-20 --cardName "Mercado Pago" --totalInstallments 12 --currentInstallment 2
+1750612751436:add-recurring-credit-expense --expenseName Wifi --amount 180 --paymentDate 2025-07-20 --cardName "Mercado Pago" --totalInstallments 12 --currentInstallment 1
+1750613268570:add-recurring-credit-expense --expenseName Wifi --amount 180 --paymentDate 2025-07-20 --cardName "Mercado Pago" --totalInstallments 12 --currentInstallment 9
+1750613524091:add-recurring-credit-expense --expenseName Wifi --amount 180 --paymentDate 2025-07-20 --cardName "Mercado Pago" --totalInstallments 12 --currentInstallment 1

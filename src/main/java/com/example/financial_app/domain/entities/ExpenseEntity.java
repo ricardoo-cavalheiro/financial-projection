@@ -1,5 +1,6 @@
 package com.example.financial_app.domain.entities;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.JdbcType;
@@ -17,9 +18,15 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 @Builder
+@Getter
+@AllArgsConstructor
+@RequiredArgsConstructor
 @Entity(name = "expense")
 @Table(name = "expense")
 public class ExpenseEntity {
@@ -41,14 +48,17 @@ public class ExpenseEntity {
   @Column(name = "is_recurring")
   private Boolean isRecurring;
 
-  @Column(name = "recurrence_day")
-  private Integer recurrenceDay;
+  @Column(name = "is_paid")
+  private Boolean isPaid;
 
-  @Column(name = "installments")
-  private Integer installments;
+  @Column(name = "total_installments")
+  private Integer totalInstallments;
 
-  @Column(name = "current_installment")
-  private Integer currentInstallment;
+  @Column(name = "installment_number")
+  private Integer installmentNumber;
+
+  @Column(name = "payment_date")
+  private LocalDate paymentDate;
 
   @Column(name = "created_at")
   @CreationTimestamp
@@ -57,4 +67,12 @@ public class ExpenseEntity {
   @ManyToOne
   @JoinColumn(name = "card_id")
   private CardEntity card;
+
+  @Override
+  public String toString() {
+    return String.format(
+        "Expense[id=%d, desc=%s, amount=%.2f, type=%s, recurring=%s, paymentDate=%s, card=%s]",
+        id, description, amount, paymentType, isRecurring, paymentDate,
+        card != null ? card.getName() : "No card associated");
+  }
 }

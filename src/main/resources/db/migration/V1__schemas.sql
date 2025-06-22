@@ -14,10 +14,11 @@ CREATE TABLE expense (
   amount        NUMERIC(10,2) NOT NULL CHECK (amount >= 0),
   payment_type          expense_kind NOT NULL,
   is_recurring  BOOLEAN     NOT NULL DEFAULT FALSE,
-  recurrence_day SMALLINT NULL, -- dia do mês em que o gasto acontece
+  is_paid         BOOLEAN     NOT NULL DEFAULT FALSE,
   card_id       INT         NULL REFERENCES card(id) ON DELETE SET NULL,
-  installments SMALLINT NULL, -- quantidade total de parcelas caso o gasto tenha sido parcelado
-  current_installment SMALLINT NULL, -- número da parcela atual
+  total_installments SMALLINT NULL, -- quantidade total de parcelas caso o gasto tenha sido parcelado
+  installment_number SMALLINT NULL, -- número da parcela atual
+  payment_date      DATE        NOT NULL,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 

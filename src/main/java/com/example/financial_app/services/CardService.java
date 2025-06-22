@@ -2,7 +2,6 @@ package com.example.financial_app.services;
 
 import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.command.annotation.Option;
-import org.springframework.shell.standard.ShellOption;
 
 import com.example.financial_app.domain.entities.CardEntity;
 import com.example.financial_app.repositories.ICardRepository;
