@@ -71,8 +71,8 @@ public class ExpenseEntity {
   @Override
   public String toString() {
     return String.format(
-        "Expense[id=%d, desc=%s, amount=%.2f, type=%s, recurring=%s, paymentDate=%s, card=%s]",
-        id, description, amount, paymentType, isRecurring, paymentDate,
+        "Expense[id=%d, desc=%s, amount=%.2f, type=%s, recurring=%s, paymentDate=%s, isPaid=%s, card=%s]",
+        id, description, amount, paymentType, isRecurring, paymentDate, isPaid,
         card != null ? card.getName() : "No card associated");
   }
 }

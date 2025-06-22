@@ -26,3 +26,4 @@
 1750612751436:add-recurring-credit-expense --expenseName Wifi --amount 180 --paymentDate 2025-07-20 --cardName "Mercado Pago" --totalInstallments 12 --currentInstallment 1
 1750613268570:add-recurring-credit-expense --expenseName Wifi --amount 180 --paymentDate 2025-07-20 --cardName "Mercado Pago" --totalInstallments 12 --currentInstallment 9
 1750613524091:add-recurring-credit-expense --expenseName Wifi --amount 180 --paymentDate 2025-07-20 --cardName "Mercado Pago" --totalInstallments 12 --currentInstallment 1
+1750614416897:help

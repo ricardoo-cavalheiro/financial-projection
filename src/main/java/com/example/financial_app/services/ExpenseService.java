@@ -28,8 +28,8 @@ public class ExpenseService {
   private final ICardRepository cardRepository;
   private final IExpenseRepository expenseRepository;
 
-  @Command(command = "add-recurring-debit-expense", description = "Add a new recurringdebit expense.")
-  public void addDebitExpense(
+  @Command(command = "add-recurring-debit-expense", description = "Add a new recurring debit expense.")
+  public void addRecurringDebitExpense(
       @Option(required = true) @Size(min = 3, max = 20, message = "Invalid expense name. Name must be between 3 and 20 characters.") String expenseName,
       @Option(required = true) @Min(0) Double amount,
       @Option(required = true) @FutureOrPresent LocalDate paymentDate
@@ -84,7 +84,7 @@ public class ExpenseService {
   }
 
   @Command(command = "add-recurring-credit-expense", description = "Add a new recurring credit expense.")
-  public void addExpense(
+  public void addRecurringCreditExpense(
       @Option(required = true) @Size(min = 3, max = 20, message = "Invalid expense name. Name must be between 3 and 20 characters.") String expenseName,
       @Option(required = true) @Min(0) Double amount,
       @Option(required = true) @FutureOrPresent LocalDate paymentDate,
@@ -135,7 +135,7 @@ public class ExpenseService {
   }
 
   @Command(command = "add-onetime-credit-expense", description = "Add a new one-time credit expense.")
-  public void addOneTimeExpense(
+  public void addOneTimeCreditExpense(
       @Option(required = true) @Size(min = 3, max = 20, message = "Invalid expense name. Name must be between 3 and 20 characters.") String expenseName,
       @Option(required = true) @Min(0) Double amount,
       @Option(required = true) @FutureOrPresent LocalDate paymentDate,
@@ -167,7 +167,7 @@ public class ExpenseService {
     log.info("One-time credit expense added successfully!");
   }
 
-  @Command(command = "list-expenses", description = "List all expenses for the next 12 months")
+  @Command(command = "list-expenses", description = "List all expenses for the next 12 months.")
   public void listExpenses() {
     log.info("Listing all expenses...");
 
