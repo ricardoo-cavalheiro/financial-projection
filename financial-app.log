@@ -27,3 +27,14 @@
 1750613268570:add-recurring-credit-expense --expenseName Wifi --amount 180 --paymentDate 2025-07-20 --cardName "Mercado Pago" --totalInstallments 12 --currentInstallment 9
 1750613524091:add-recurring-credit-expense --expenseName Wifi --amount 180 --paymentDate 2025-07-20 --cardName "Mercado Pago" --totalInstallments 12 --currentInstallment 1
 1750614416897:help
+1750725873892:create-card "Mercardo Pago" 5800 15 22
+1750726186900:create-card --cardName "Mercardo Pago" --limitAmount 5800 --closingDay 15 --paymentDay 22
+1750866274464:create-card --cardName "Santander" --limitAmount 2500 --closingDay 15 --paymentDay 22
+1750884144402:add-recurring-credit-expense --expenseName "Wifi" --amount 180 --paymentDate 2025-06-20 --cardName "Mercado Pago" --totalInstallments 12 --installmentNumber 4
+1750884161145:add-recurring-credit-expense --expenseName "Wifi" --amount 180 --paymentDate 2025-07-20 --cardName "Mercado Pago" --totalInstallments 12 --installmentNumber 4
+1750884188896:stacktrace
+1750884346684:add-recurring-credit-expense --expenseName "Wifi" --amount 180 --paymentDate 2025-07-20 --cardName "Mercado Pago" --totalInstallments 12 --installmentNumber 4
+1750884823110:add-onetime-credit-expense --expenseName "Mercado" --amount 49.9 --paymentDate 2025-06-25 --cardName "Mercado Pago"
+1750886115699:add-recurring-credit-expense --expenseName "Wifi" --amount 180 --paymentDate 2025-07-20 --cardName "Mercado Pago" --totalInstallments 12 --installmentNumber 4
+1750886132530:add-onetime-credit-expense --expenseName "Mercado" --amount 49.9 --paymentDate 2025-06-25 --cardName "Mercado Pago"
+1750886360272:add-recurring-credit-expense --expenseName "Wifi" --amount 180 --paymentDate 2025-07-20 --cardName "Mercado Pago" --totalInstallments 12 --installmentNumber 4

@@ -2,18 +2,22 @@ package com.example.financial_app.services;
 
 import static java.util.Objects.nonNull;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.command.annotation.Option;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.financial_app.domain.entities.CardEntity;
 import com.example.financial_app.domain.entities.ExpenseEntity;
+import com.example.financial_app.domain.entities.InvoiceEntity;
 import com.example.financial_app.domain.enums.PaymentTypeEnum;
 import com.example.financial_app.repositories.ICardRepository;
 import com.example.financial_app.repositories.IExpenseRepository;
+import com.example.financial_app.repositories.IInvoiceRepository;
 
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.Min;
@@ -22,16 +26,18 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@Transactional
 @Command(group = "Expense", description = "Commands related to expense management.")
 @RequiredArgsConstructor
 public class ExpenseService {
   private final ICardRepository cardRepository;
   private final IExpenseRepository expenseRepository;
+  private final IInvoiceRepository invoiceRepository;
 
   @Command(command = "add-recurring-debit-expense", description = "Add a new recurring debit expense.")
   public void addRecurringDebitExpense(
       @Option(required = true) @Size(min = 3, max = 20, message = "Invalid expense name. Name must be between 3 and 20 characters.") String expenseName,
-      @Option(required = true) @Min(0) Double amount,
+      @Option(required = true) @Min(0) BigDecimal amount,
       @Option(required = true) @FutureOrPresent LocalDate paymentDate
   ) {
     log.info("Adding debit expense with name: {}, amount: {}, payment date: {}", expenseName, amount, paymentDate);
@@ -62,7 +68,7 @@ public class ExpenseService {
   @Command(command = "add-onetime-debit-expense", description = "Add a new one-time debit expense.")
   public void addOneTimeDebitExpense(
       @Option(required = true) @Size(min = 3, max = 20, message = "Invalid expense name. Name must be between 3 and 20 characters.") String expenseName,
-      @Option(required = true) @Min(0) Double amount,
+      @Option(required = true) @Min(0) BigDecimal amount,
       @Option(required = true) @FutureOrPresent LocalDate paymentDate
   ) {
     log.info("Adding one-time debit expense with name: {}, amount: {}, payment date: {}", expenseName, amount, paymentDate);
@@ -86,7 +92,7 @@ public class ExpenseService {
   @Command(command = "add-recurring-credit-expense", description = "Add a new recurring credit expense.")
   public void addRecurringCreditExpense(
       @Option(required = true) @Size(min = 3, max = 20, message = "Invalid expense name. Name must be between 3 and 20 characters.") String expenseName,
-      @Option(required = true) @Min(0) Double amount,
+      @Option(required = true) @Min(0) BigDecimal amount,
       @Option(required = true) @FutureOrPresent LocalDate paymentDate,
       @Option(required = false) @Size(min = 3, max = 20, message = "Invalid card name. Name must be between 3 and 20 characters.") String cardName,
       @Option(required = false) @Min(1) Integer totalInstallments,
@@ -103,7 +109,25 @@ public class ExpenseService {
       });
     }
 
+    final var finalCard = card;
     var currentDate = LocalDate.now();
+
+    var currentMonthInvoice = finalCard.getInvoices()
+        .stream()
+        .filter(invoice -> currentDate.isBefore(invoice.getClosingDate()) || currentDate.isEqual(invoice.getClosingDate()))
+        .findFirst()
+        .orElseGet(() -> {
+            var newInvoice = InvoiceEntity.builder()
+                .amount(BigDecimal.ZERO)
+                .closingDate(currentDate.withDayOfMonth(finalCard.getClosingDay()))
+                .paymentDate(currentDate.withDayOfMonth(finalCard.getPaymentDay()))
+                .isPaid(Boolean.FALSE)
+                .card(finalCard)
+                .build();
+
+            return invoiceRepository.save(newInvoice);
+        });
+
     var expenses = new ArrayList<ExpenseEntity>();
     for (int i = 0; i < totalInstallments; i++) {
       var currentIterationMonth = currentDate.withDayOfMonth(paymentDate.getDayOfMonth()).plusMonths(i);
@@ -120,6 +144,7 @@ public class ExpenseService {
           .paymentType(PaymentTypeEnum.CREDIT)
           .isRecurring(Boolean.TRUE)
           .card(card)
+          .invoice(currentMonthInvoice)
           .isPaid(currentIterationMonth.isBefore(currentDate) || currentIterationMonth.isEqual(currentDate))
           .paymentDate(currentIterationMonth)
           .totalInstallments(totalInstallments)
@@ -137,7 +162,7 @@ public class ExpenseService {
   @Command(command = "add-onetime-credit-expense", description = "Add a new one-time credit expense.")
   public void addOneTimeCreditExpense(
       @Option(required = true) @Size(min = 3, max = 20, message = "Invalid expense name. Name must be between 3 and 20 characters.") String expenseName,
-      @Option(required = true) @Min(0) Double amount,
+      @Option(required = true) @Min(0) BigDecimal amount,
       @Option(required = true) @FutureOrPresent LocalDate paymentDate,
       @Option(required = false) @Size(min = 3, max = 20, message = "Invalid card name. Name must be between 3 and 20 characters.") String cardName) {
     log.info("Adding one-time credit expense with name: {}, amount: {}, payment date: {}", expenseName, amount, paymentDate);
@@ -150,7 +175,24 @@ public class ExpenseService {
       });
     }
 
+    final var finalCard = card;
     var currentDate = LocalDate.now();
+
+    var currentMonthInvoice = finalCard.getInvoices()
+        .stream()
+        .filter(invoice -> currentDate.isBefore(invoice.getClosingDate()) || currentDate.isEqual(invoice.getClosingDate()))
+        .findFirst()
+        .orElseGet(() -> {
+            var newInvoice = InvoiceEntity.builder()
+                .amount(BigDecimal.ZERO)
+                .closingDate(currentDate.withDayOfMonth(finalCard.getClosingDay()))
+                .paymentDate(currentDate.withDayOfMonth(finalCard.getPaymentDay()))
+                .isPaid(Boolean.FALSE)
+                .card(finalCard)
+                .build();
+
+            return invoiceRepository.save(newInvoice);
+        });
 
     var expense = ExpenseEntity.builder()
         .description(expenseName)
@@ -158,6 +200,7 @@ public class ExpenseService {
         .paymentType(PaymentTypeEnum.CREDIT)
         .isRecurring(Boolean.FALSE)
         .card(card)
+        .invoice(currentMonthInvoice)
         .isPaid(paymentDate.isBefore(currentDate) || paymentDate.isEqual(currentDate))
         .paymentDate(paymentDate)
         .build();
@@ -165,6 +208,19 @@ public class ExpenseService {
     expenseRepository.save(expense);
 
     log.info("One-time credit expense added successfully!");
+  }
+
+  @Command(command = "expenses-projection", description = "Project expenses for the next month.")
+  public void expensesProjection() {
+    // buscar todos os gastos
+
+    // para gastos do tipo `DEBITO`, somar todos os gastos do mês
+
+    // para gastos do tipo ```CREDITO`, buscar os cartões de crédito
+
+      // para cada cartão, buscar todos os gastos entre a última data de fechamento e a próxima data de fechamento
+
+      // somar todos os gastos para cada cartão dentro desse período
   }
 
   @Command(command = "list-expenses", description = "List all expenses for the next 12 months.")

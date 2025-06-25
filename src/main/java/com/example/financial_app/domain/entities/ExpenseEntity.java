@@ -1,5 +1,6 @@
 package com.example.financial_app.domain.entities;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import org.hibernate.annotations.CreationTimestamp;
@@ -38,7 +39,7 @@ public class ExpenseEntity {
   private String description;
 
   @Column(name = "amount")
-  private Double amount;
+  private BigDecimal amount;
 
   @Enumerated(EnumType.STRING)
   @JdbcType(PostgreSQLEnumJdbcType.class)
@@ -67,6 +68,10 @@ public class ExpenseEntity {
   @ManyToOne
   @JoinColumn(name = "card_id")
   private CardEntity card;
+
+  @ManyToOne
+  @JoinColumn(name = "invoice_id")
+  private InvoiceEntity invoice;
 
   @Override
   public String toString() {

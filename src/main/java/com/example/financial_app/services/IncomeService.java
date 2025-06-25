@@ -1,5 +1,7 @@
 package com.example.financial_app.services;
 
+import java.math.BigDecimal;
+
 import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.command.annotation.Option;
 
@@ -20,7 +22,7 @@ public class IncomeService {
   @Command(command = "add-income", description = "Add a new income")
   public void addIncome(
     @Option(required = true) @Size(min=3, max=20, message = "Invalid income name. Name must be between 3 and 20 characters.") String incomeName,
-    @Option(required = true) @Min(0) Double amount,
+    @Option(required = true) @Min(0) BigDecimal amount,
     @Option(required = true) @Min(1) Integer recurrenceDay
   ) {
     log.info(
