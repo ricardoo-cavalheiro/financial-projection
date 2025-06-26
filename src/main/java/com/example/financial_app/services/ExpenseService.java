@@ -1,7 +1,5 @@
 package com.example.financial_app.services;
 
-import static java.util.Objects.nonNull;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -11,15 +9,12 @@ import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.command.annotation.Option;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.financial_app.domain.entities.CardEntity;
 import com.example.financial_app.domain.entities.ExpenseEntity;
-import com.example.financial_app.domain.entities.InvoiceEntity;
 import com.example.financial_app.domain.enums.PaymentTypeEnum;
-import com.example.financial_app.repositories.ICardRepository;
 import com.example.financial_app.repositories.IExpenseRepository;
-import com.example.financial_app.repositories.IInvoiceRepository;
 
 import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
@@ -30,9 +25,9 @@ import lombok.extern.slf4j.Slf4j;
 @Command(group = "Expense", description = "Commands related to expense management.")
 @RequiredArgsConstructor
 public class ExpenseService {
-  private final ICardRepository cardRepository;
+  private final CardService cardService;
+  private final InvoiceService invoiceService;
   private final IExpenseRepository expenseRepository;
-  private final IInvoiceRepository invoiceRepository;
 
   @Command(command = "add-recurring-debit-expense", description = "Add a new recurring debit expense.")
   public void addRecurringDebitExpense(
@@ -93,44 +88,21 @@ public class ExpenseService {
   public void addRecurringCreditExpense(
       @Option(required = true) @Size(min = 3, max = 20, message = "Invalid expense name. Name must be between 3 and 20 characters.") String expenseName,
       @Option(required = true) @Min(0) BigDecimal amount,
-      @Option(required = true) @FutureOrPresent LocalDate paymentDate,
+      @Option(required = true) @Min(1) @Max(31) Integer paymentDay,
       @Option(required = false) @Size(min = 3, max = 20, message = "Invalid card name. Name must be between 3 and 20 characters.") String cardName,
       @Option(required = false) @Min(1) Integer totalInstallments,
       @Option(required = false) @Min(1) Integer installmentNumber) {
     log.info(
-        "Adding expense for the next 12 months with name: {}, amount: {}, payment date: {}",
-        expenseName, amount, paymentDate);
+        "Adding expense for the next 12 months with name: {}, amount: {}, payment day: {}",
+        expenseName, amount, paymentDay);
 
-    CardEntity card = null;
-    if (nonNull(cardName)) {
-      card = cardRepository.findByName(cardName).orElseThrow(() -> {
-        log.error("Card with name '{}' not found.", cardName);
-        return new IllegalArgumentException("Card not found: " + cardName);
-      });
-    }
+    var card = cardService.getCard(cardName);
+    var currentMonthInvoice = invoiceService.getCurrentMonthInvoice(cardName);
 
-    final var finalCard = card;
     var currentDate = LocalDate.now();
-
-    var currentMonthInvoice = finalCard.getInvoices()
-        .stream()
-        .filter(invoice -> currentDate.isBefore(invoice.getClosingDate()) || currentDate.isEqual(invoice.getClosingDate()))
-        .findFirst()
-        .orElseGet(() -> {
-            var newInvoice = InvoiceEntity.builder()
-                .amount(BigDecimal.ZERO)
-                .closingDate(currentDate.withDayOfMonth(finalCard.getClosingDay()))
-                .paymentDate(currentDate.withDayOfMonth(finalCard.getPaymentDay()))
-                .isPaid(Boolean.FALSE)
-                .card(finalCard)
-                .build();
-
-            return invoiceRepository.save(newInvoice);
-        });
-
     var expenses = new ArrayList<ExpenseEntity>();
     for (int i = 0; i < totalInstallments; i++) {
-      var currentIterationMonth = currentDate.withDayOfMonth(paymentDate.getDayOfMonth()).plusMonths(i);
+      var currentIterationMonth = currentDate.withDayOfMonth(paymentDay).plusMonths(i);
 
       var installmentNumberForCurrentIteration = installmentNumber + i;
 
@@ -167,33 +139,10 @@ public class ExpenseService {
       @Option(required = false) @Size(min = 3, max = 20, message = "Invalid card name. Name must be between 3 and 20 characters.") String cardName) {
     log.info("Adding one-time credit expense with name: {}, amount: {}, payment date: {}", expenseName, amount, paymentDate);
 
-    CardEntity card = null;
-    if (nonNull(cardName)) {
-      card = cardRepository.findByName(cardName).orElseThrow(() -> {
-        log.error("Card with name '{}' not found.", cardName);
-        return new IllegalArgumentException("Card not found: " + cardName);
-      });
-    }
+    var card = cardService.getCard(cardName);
+    var currentMonthInvoice = invoiceService.getCurrentMonthInvoice(cardName);
 
-    final var finalCard = card;
     var currentDate = LocalDate.now();
-
-    var currentMonthInvoice = finalCard.getInvoices()
-        .stream()
-        .filter(invoice -> currentDate.isBefore(invoice.getClosingDate()) || currentDate.isEqual(invoice.getClosingDate()))
-        .findFirst()
-        .orElseGet(() -> {
-            var newInvoice = InvoiceEntity.builder()
-                .amount(BigDecimal.ZERO)
-                .closingDate(currentDate.withDayOfMonth(finalCard.getClosingDay()))
-                .paymentDate(currentDate.withDayOfMonth(finalCard.getPaymentDay()))
-                .isPaid(Boolean.FALSE)
-                .card(finalCard)
-                .build();
-
-            return invoiceRepository.save(newInvoice);
-        });
-
     var expense = ExpenseEntity.builder()
         .description(expenseName)
         .amount(amount)
@@ -212,15 +161,13 @@ public class ExpenseService {
 
   @Command(command = "expenses-projection", description = "Project expenses for the next month.")
   public void expensesProjection() {
-    // buscar todos os gastos
+    // buscar a fatura atual
+      // somar todos os gastos da fatura atual
 
-    // para gastos do tipo `DEBITO`, somar todos os gastos do mês
+    // invoiceRepository.findByClosingDate(null)
 
-    // para gastos do tipo ```CREDITO`, buscar os cartões de crédito
-
-      // para cada cartão, buscar todos os gastos entre a última data de fechamento e a próxima data de fechamento
-
-      // somar todos os gastos para cada cartão dentro desse período
+    // buscar todos os gastos do próximo mês do tipo DEBITO e que seja recorrente
+      // somar esses gastos
   }
 
   @Command(command = "list-expenses", description = "List all expenses for the next 12 months.")

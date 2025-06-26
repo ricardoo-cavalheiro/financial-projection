@@ -49,4 +49,12 @@ public class InvoiceEntity {
   @ManyToOne
   @JoinColumn(name = "card_id")
   private CardEntity card;
+
+  @Override
+  public String toString() {
+    return String.format(
+        "Invoice[id=%d, amount=%.2f, isPaid=%s, closingDate=%s, paymentDate=%s, cardName=%s]",
+        id, amount, isPaid, closingDate, paymentDate,
+        card != null ? card.getName() : "No card associated");
+  }
 }

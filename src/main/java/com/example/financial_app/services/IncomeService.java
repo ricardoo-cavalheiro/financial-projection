@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 
 import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.command.annotation.Option;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.financial_app.domain.entities.IncomeEntity;
 import com.example.financial_app.repositories.IIncomeRepository;
@@ -14,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@Transactional
 @Command(group = "Income", description = "Commands related to income management")
 @RequiredArgsConstructor
 public class IncomeService {

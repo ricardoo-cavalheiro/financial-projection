@@ -38,3 +38,18 @@
 1750886115699:add-recurring-credit-expense --expenseName "Wifi" --amount 180 --paymentDate 2025-07-20 --cardName "Mercado Pago" --totalInstallments 12 --installmentNumber 4
 1750886132530:add-onetime-credit-expense --expenseName "Mercado" --amount 49.9 --paymentDate 2025-06-25 --cardName "Mercado Pago"
 1750886360272:add-recurring-credit-expense --expenseName "Wifi" --amount 180 --paymentDate 2025-07-20 --cardName "Mercado Pago" --totalInstallments 12 --installmentNumber 4
+1750946918936:create-invoices --months 12
+1750947339318:create-invoices --months 12 --cardName "Mercado Pago"
+1750948839803:get-card --cardName "Mercado Pago"
+1750953641377:get-current-month-invoice --cardName "Mercado Pago"
+1750974325512:create-invoices --months 12 --cardName "Mercado Pago"
+1750974358984:clear
+1750974369676:get-invoices --cardName "Mercado Pago"
+1750974413563:clear
+1750974445574:get-current-month-invoice --cardName "Mercado Pago"
+1750974460320:clear
+1750974532175:add-recurring-credit-expense --expenseName "Wi-Fi" --amount 180 --paymentDate 2025-06-20 --cardName "Mercado Pago" --totalInstallments 12 --installmentNumber 4
+1750974544954:add-recurring-credit-expense --expenseName "Wi-Fi" --amount 180 --paymentDate 2025-07-20 --cardName "Mercado Pago" --totalInstallments 12 --installmentNumber 4
+1750974674697:create-invoices --months 12 --cardName "Mercado Pago"
+1750974692595:add-recurring-credit-expense --expenseName "Wi-Fi" --amount 180 --paymentDay 20 --cardName "Mercado Pago" --totalInstallments 12 --installmentNumber 4
+1750974781850:add-onetime-credit-expense --expenseName "Mercado" --amount 49.9 --paymentDate 2025-06-26 --cardName "Mercado Pago"
