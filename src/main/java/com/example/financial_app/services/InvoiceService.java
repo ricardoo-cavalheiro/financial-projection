@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.data.domain.Limit;
 import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.command.annotation.Option;
 
@@ -53,11 +54,11 @@ public class InvoiceService {
         invoiceRepository.saveAll(invoices);
     }
 
-    @Command(command = "get-invoices", description = "Get invoices.")
+    @Command(command = "get-invoices", description = "Get next 12 months invoices.")
     public List<InvoiceEntity> getInvoices(@Option(required = false) String cardName) {
-        log.info("Retrieving all invoices");
+        log.info("Retrieving invoices for the next 12 months.");
 
-        var invoices = invoiceRepository.findAllByCardName(cardName);
+        var invoices = invoiceRepository.findAllByCardName(cardName, Limit.of(12));
 
         if (invoices.isEmpty()) {
             log.info("No invoices found.");

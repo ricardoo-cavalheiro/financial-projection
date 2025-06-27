@@ -53,3 +53,5 @@
 1750974674697:create-invoices --months 12 --cardName "Mercado Pago"
 1750974692595:add-recurring-credit-expense --expenseName "Wi-Fi" --amount 180 --paymentDay 20 --cardName "Mercado Pago" --totalInstallments 12 --installmentNumber 4
 1750974781850:add-onetime-credit-expense --expenseName "Mercado" --amount 49.9 --paymentDate 2025-06-26 --cardName "Mercado Pago"
+1750986018463:create-invoices --months 24 --cardName "Nubank"
+1750986033749:get-invoices --cardName Nubank

@@ -33,15 +33,15 @@ public class ExpenseService {
   public void addRecurringDebitExpense(
       @Option(required = true) @Size(min = 3, max = 20, message = "Invalid expense name. Name must be between 3 and 20 characters.") String expenseName,
       @Option(required = true) @Min(0) BigDecimal amount,
-      @Option(required = true) @FutureOrPresent LocalDate paymentDate
+      @Option(required = true) @Min(1) @Max(31) Integer paymentDay
   ) {
-    log.info("Adding debit expense with name: {}, amount: {}, payment date: {}", expenseName, amount, paymentDate);
+    log.info("Adding debit expense with name: {}, amount: {}, payment day: {}", expenseName, amount, paymentDay);
 
     var currentDate = LocalDate.now();
 
     var expenses = new ArrayList<ExpenseEntity>();
     for (int i = 0; i < 12; i++) {
-      var currentIterationMonth = currentDate.withDayOfMonth(paymentDate.getDayOfMonth()).plusMonths(i);
+      var currentIterationMonth = currentDate.withDayOfMonth(paymentDay).plusMonths(i);
 
       var expense = ExpenseEntity.builder()
           .description(expenseName)
@@ -159,7 +159,7 @@ public class ExpenseService {
     log.info("One-time credit expense added successfully!");
   }
 
-  @Command(command = "expenses-projection", description = "Project expenses for the next month.")
+  @Command(command = "expenses-projection", description = "Project expenses for the next 12 months.")
   public void expensesProjection() {
     // buscar a fatura atual
       // somar todos os gastos da fatura atual
