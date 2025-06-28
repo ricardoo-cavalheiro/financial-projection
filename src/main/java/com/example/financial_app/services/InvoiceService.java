@@ -6,10 +6,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.domain.Limit;
+import org.springframework.data.domain.Sort;
 import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.command.annotation.Option;
 
+import com.example.financial_app.domain.entities.ExpenseEntity;
 import com.example.financial_app.domain.entities.InvoiceEntity;
+import com.example.financial_app.domain.enums.PaymentTypeEnum;
 import com.example.financial_app.repositories.IInvoiceRepository;
 
 import jakarta.transaction.Transactional;
@@ -58,7 +61,13 @@ public class InvoiceService {
     public List<InvoiceEntity> getInvoices(@Option(required = false) String cardName) {
         log.info("Retrieving invoices for the next 12 months.");
 
-        var invoices = invoiceRepository.findAllByCardName(cardName, Limit.of(12));
+        var currentDate = LocalDate.now().withDayOfMonth(1);
+        var invoices = invoiceRepository.findAllByCardName(
+          currentDate,
+          cardName, 
+          Limit.of(12), 
+          Sort.by(Sort.Direction.ASC, "closingDate")
+        );
 
         if (invoices.isEmpty()) {
             log.info("No invoices found.");
@@ -73,20 +82,38 @@ public class InvoiceService {
         return invoices;
     }
 
-    @Command(command = "get-current-month-invoice", description = "Get card invoice for the current month.")
-    public InvoiceEntity getCurrentMonthInvoice(@Option(required = true) String cardName) {
-      log.info("Retrieving current month invoice for card: {}", cardName);
+    @Command(command = "get-invoice-by-date", description = "Get card invoice for the specified date.")
+    public InvoiceEntity getInvoiceByDate(
+      @Option(required = true) String cardName, 
+      @Option(required = true) LocalDate closingDate
+    ) {
+      log.info("Retrieving invoice for card '{}' and closing date '{}'", cardName, closingDate);
 
-      var currentDate = LocalDate.now();
       var invoice = getInvoices(cardName).stream()
-          .filter(x -> currentDate.isBefore(x.getClosingDate()) || currentDate.isEqual(x.getClosingDate()))
+          .filter(x -> x.getClosingDate().equals(closingDate))
           .findFirst();
 
       if (invoice.isEmpty()) {
-        log.info("No invoice found for the current month.");
+        log.info("No invoice found for the specified closing date '{}'", closingDate);
       }
 
-      log.info("Current month invoice found: {}", invoice.get());
+      log.info("Invoice found: {}", invoice.get());
       return invoice.get();
+    }
+
+    public BigDecimal sumInvoiceExpenses(InvoiceEntity invoice) {
+        log.info("Summing expenses for card '{}'", invoice.getCard().getName());
+
+        var totalAmount = invoice.getExpenses().stream()
+            .filter(expense -> expense.getPaymentType().equals(PaymentTypeEnum.CREDIT))
+            .map(ExpenseEntity::getAmount)
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        invoice.setAmount(totalAmount);
+
+        invoiceRepository.save(invoice);
+
+        log.info("Total amount for invoice ID {}: {}", invoice.getId(), totalAmount);
+        return totalAmount;
     }
 }

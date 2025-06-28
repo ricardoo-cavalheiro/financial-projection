@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @AllArgsConstructor
 @RequiredArgsConstructor
-@Entity(name = "income")
+@Entity(name = "IncomeEntity")
 @Table(name = "income")
 public class IncomeEntity {
   @Id

@@ -55,3 +55,62 @@
 1750974781850:add-onetime-credit-expense --expenseName "Mercado" --amount 49.9 --paymentDate 2025-06-26 --cardName "Mercado Pago"
 1750986018463:create-invoices --months 24 --cardName "Nubank"
 1750986033749:get-invoices --cardName Nubank
+1751054524665:get-current-month-invoice --cardName "Mercado Pago"
+1751054556552:sum-invoice-expenses --invoiceId 2
+1751055542081:sum-invoice-expenses --cardName "Mercado Pago"
+1751121529584:get-invoices --cardName "Mercado Pago"
+1751122922291:get-current-month-debit-expenses
+1751123121986:add-recurring-debit-expense --expenseName "Mãe" --amount 600 --paymentDay 1
+1751123124164:get-current-month-debit-expenses
+1751123483611:add-onetime-debit-expense --expenseName "Ingressos" --amount 36 paymentDate 2025-06-28
+1751123488718:add-onetime-debit-expense --expenseName "Ingressos" --amount 36 --paymentDate 2025-06-28
+1751123503570:get-current-month-debit-expenses
+1751123533556:clear
+1751123550767:get-debit-expenses
+1751123630323:get-current-month-debit-expenses
+1751123750248:sum-current-month-debit-expenses
+1751123822225:add-onetime-debit-expense --expenseName "Ração Cachorro" --amount 140 --paymentDate 2025-06-27
+1751123828781:sum-current-month-debit-expenses
+1751127173545:create-invoices --months 12 --cardName "Mercado Pago"
+1751127220640:get-invoice-by-date --cardName "Mercado Pago" --date 2025-06-01
+1751127577346:get-invoice-by-date --cardName "Mercado Pago" --date 2025-06-15
+1751127720271:get-invoice-by-date --cardName "Mercado Pago" --closingDateate 2025-10-15
+1751127724246:get-invoice-by-date --cardName "Mercado Pago" --closingDate 2025-10-15
+1751127804786:add-recurring-credit-expense --expenseName "Wi-Fi" --amount 180 --paymentDay 20 --cardName "Mercado Pago" --totalInstallments 12 --installmentNumber 4
+1751128629147:sum-invoice-expenses-by-date --cardName "Mercado Pago" --date 2025-06-15
+1751128710637:add-recurring-credit-expense --expenseName "wi-fi" --amount 180 --paymentDay 20 --cardName "Mercado Pago" --totalInstallments 12 --installmentNumber 4
+1751128762173:sum-invoice-expenses-by-date --cardName "Mercado Pago" --date 2025-07-15
+1751128867266:sum-invoice-expenses-by-date --cardName "Mercado Pago" --date 2025-06-15
+1751128960528:sum-invoice-expenses-by-date --cardName "Mercado Pago" --date 2025-07-15
+1751129085791:sum-invoice-expenses-by-date --cardName "Mercado Pago" --date 2025-06-15
+1751129729873:sum-invoice-expenses-by-date --cardName "Mercado Pago" --date 2025-08-15
+1751130346571:sum-invoice-expenses-by-date --cardName "Mercado Pago" --date 2025-05-15
+1751130351409:sum-invoice-expenses-by-date --cardName "Mercado Pago" --date 2025-06-15
+1751130473684:sum-invoice-expenses-by-date --cardName "Mercado Pago" --date 2025-07-15
+1751142111460:sum-invoice-expenses-by-date --cardName "Mercado Pago" --date 2025-06-15
+1751143150103:sum-invoice-expenses-by-date --cardName "Mercado Pago" --date 2025-07-15
+1751144070675:add-onetime-credit-expense --expenseName "Puta" --amount 250 --paymentDate 2025-06-28 --cardName "Mercado Pago"
+1751144178632:sum-invoice-expenses-by-date --cardName "Mercado Pago" --date 2025-07-15
+1751144182162:sum-invoice-expenses-by-date --cardName "Mercado Pago" --date 2025-06-15
+1751144663154:add-recurring-debit-expense --expenseName "mãe" --amount 600 --paymentDay 1
+1751144697461:sum-debit-expenses-by-date 2025-06-01
+1751144708499:add-recurring-debit-expense --expenseName "vera" --amount 600 --paymentDay 1
+1751144710026:sum-debit-expenses-by-date 2025-06-01
+1751144733697:sum-debit-expenses-by-date 2025-05-01
+1751144736743:sum-debit-expenses-by-date 2025-07-01
+1751144742438:sum-debit-expenses-by-date 2026-06-01
+1751144744852:sum-debit-expenses-by-date 2026-05-01
+1751144747341:sum-debit-expenses-by-date 2026-04-01
+1751144749908:sum-debit-expenses-by-date 2026-03-01
+1751144753180:sum-debit-expenses-by-date 2026-02-01
+1751144755506:sum-debit-expenses-by-date 2026-01-01
+1751144814024:sum-debit-expenses-by-date 2025-12-01
+1751144816922:sum-debit-expenses-by-date 2025-11-01
+1751144850176:sum-debit-expenses-by-date 2025-12-01
+1751146783434:expenses-projection
+1751146946027:create-invoices --months 12 --cardName "Nubank"
+1751146947988:expenses-projection
+1751146970178:clear
+1751146971020:expenses-projection
+1751147419042:clear
+1751147761051:expenses-projection

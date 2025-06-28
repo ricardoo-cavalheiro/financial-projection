@@ -12,14 +12,17 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 @Builder
-@Getter
+@Data
 @AllArgsConstructor
 @RequiredArgsConstructor
-@Entity(name = "card")
+@ToString(exclude = "invoices")
+@Entity(name = "CardEntity")
 @Table(name = "card")
 public class CardEntity {
   @Id

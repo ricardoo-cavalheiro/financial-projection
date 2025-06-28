@@ -3,6 +3,7 @@ package com.example.financial_app.domain.entities;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -13,17 +14,20 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 @Builder
-@Getter
+@Data
 @AllArgsConstructor
 @RequiredArgsConstructor
-@Entity(name = "invoice")
+@ToString(exclude = "expenses")
+@Entity(name = "InvoiceEntity")
 @Table(name = "invoice")
 public class InvoiceEntity {
   @Id
@@ -50,11 +54,6 @@ public class InvoiceEntity {
   @JoinColumn(name = "card_id")
   private CardEntity card;
 
-  @Override
-  public String toString() {
-    return String.format(
-        "Invoice[id=%d, amount=%.2f, isPaid=%s, closingDate=%s, paymentDate=%s, cardName=%s]",
-        id, amount, isPaid, closingDate, paymentDate,
-        card != null ? card.getName() : "No card associated");
-  }
+  @OneToMany(mappedBy = "invoice")
+  private List<ExpenseEntity> expenses;
 }

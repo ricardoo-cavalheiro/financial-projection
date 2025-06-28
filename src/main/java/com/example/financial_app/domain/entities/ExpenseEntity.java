@@ -21,14 +21,16 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Builder
+@Data
 @Getter
 @AllArgsConstructor
 @RequiredArgsConstructor
-@Entity(name = "expense")
+@Entity(name = "ExpenseEntity")
 @Table(name = "expense")
 public class ExpenseEntity {
   @Id
@@ -72,12 +74,4 @@ public class ExpenseEntity {
   @ManyToOne
   @JoinColumn(name = "invoice_id")
   private InvoiceEntity invoice;
-
-  @Override
-  public String toString() {
-    return String.format(
-        "Expense[id=%d, desc=%s, amount=%.2f, type=%s, recurring=%s, paymentDate=%s, isPaid=%s, card=%s]",
-        id, description, amount, paymentType, isRecurring, paymentDate, isPaid,
-        card != null ? card.getName() : "No card associated");
-  }
 }

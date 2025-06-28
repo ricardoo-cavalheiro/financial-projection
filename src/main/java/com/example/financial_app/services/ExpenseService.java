@@ -5,6 +5,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.data.domain.Limit;
+import org.springframework.data.domain.Sort;
 import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.command.annotation.Option;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,7 +15,6 @@ import com.example.financial_app.domain.entities.ExpenseEntity;
 import com.example.financial_app.domain.enums.PaymentTypeEnum;
 import com.example.financial_app.repositories.IExpenseRepository;
 
-import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
@@ -64,7 +65,7 @@ public class ExpenseService {
   public void addOneTimeDebitExpense(
       @Option(required = true) @Size(min = 3, max = 20, message = "Invalid expense name. Name must be between 3 and 20 characters.") String expenseName,
       @Option(required = true) @Min(0) BigDecimal amount,
-      @Option(required = true) @FutureOrPresent LocalDate paymentDate
+      @Option(required = true) LocalDate paymentDate
   ) {
     log.info("Adding one-time debit expense with name: {}, amount: {}, payment date: {}", expenseName, amount, paymentDate);
 
@@ -97,12 +98,13 @@ public class ExpenseService {
         expenseName, amount, paymentDay);
 
     var card = cardService.getCard(cardName);
-    var currentMonthInvoice = invoiceService.getCurrentMonthInvoice(cardName);
 
     var currentDate = LocalDate.now();
     var expenses = new ArrayList<ExpenseEntity>();
     for (int i = 0; i < totalInstallments; i++) {
       var currentIterationMonth = currentDate.withDayOfMonth(paymentDay).plusMonths(i);
+      var currentIterationInvoiceDate = currentIterationMonth.withDayOfMonth(card.getClosingDay());
+      var currentMonthInvoice = invoiceService.getInvoiceByDate(cardName, currentIterationInvoiceDate);
 
       var installmentNumberForCurrentIteration = installmentNumber + i;
 
@@ -135,14 +137,14 @@ public class ExpenseService {
   public void addOneTimeCreditExpense(
       @Option(required = true) @Size(min = 3, max = 20, message = "Invalid expense name. Name must be between 3 and 20 characters.") String expenseName,
       @Option(required = true) @Min(0) BigDecimal amount,
-      @Option(required = true) @FutureOrPresent LocalDate paymentDate,
+      @Option(required = true) LocalDate paymentDate,
       @Option(required = false) @Size(min = 3, max = 20, message = "Invalid card name. Name must be between 3 and 20 characters.") String cardName) {
     log.info("Adding one-time credit expense with name: {}, amount: {}, payment date: {}", expenseName, amount, paymentDate);
 
-    var card = cardService.getCard(cardName);
-    var currentMonthInvoice = invoiceService.getCurrentMonthInvoice(cardName);
-
     var currentDate = LocalDate.now();
+    var card = cardService.getCard(cardName);
+    var currentMonthInvoice = invoiceService.getInvoiceByDate(cardName, currentDate.withDayOfMonth(card.getClosingDay()));
+
     var expense = ExpenseEntity.builder()
         .description(expenseName)
         .amount(amount)
@@ -159,27 +161,37 @@ public class ExpenseService {
     log.info("One-time credit expense added successfully!");
   }
 
-  @Command(command = "expenses-projection", description = "Project expenses for the next 12 months.")
-  public void expensesProjection() {
-    // buscar a fatura atual
-      // somar todos os gastos da fatura atual
+  public List<ExpenseEntity> getDebitExpenses() {
+    log.info("Retrieving all debit expenses for the next 12 months.");
 
-    // invoiceRepository.findByClosingDate(null)
+    var currentDate = LocalDate.now().withDayOfMonth(1);
+    var debitExpenses = expenseRepository.findDebitExpenses(
+      currentDate, 
+      Limit.of(12), 
+      Sort.by("paymentDate").ascending()
+    );
 
-    // buscar todos os gastos do próximo mês do tipo DEBITO e que seja recorrente
-      // somar esses gastos
-  }
-
-  @Command(command = "list-expenses", description = "List all expenses for the next 12 months.")
-  public void listExpenses() {
-    log.info("Listing all expenses...");
-
-    var expenses = (List<ExpenseEntity>) expenseRepository.findAll();
-    if (expenses.isEmpty()) {
-      log.info("No expenses found.");
-      return;
+    if (debitExpenses.isEmpty()) {
+      log.info("No debit expenses found.");
+    } else {
+      debitExpenses.forEach(expense -> log.info(expense.toString()));
     }
 
-    expenses.forEach(expense -> log.info(expense.toString()));
+    return debitExpenses;
+  }
+
+  public BigDecimal sumDebitExpenses(List<ExpenseEntity> debitExpenses) {
+    log.info("Summing all debit expenses.");
+
+    if (debitExpenses.isEmpty()) {
+      log.info("No debit expenses found for.");
+      return BigDecimal.ZERO;
+    }
+
+    var totalAmount = debitExpenses.stream()
+        .map(ExpenseEntity::getAmount)
+        .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+    return totalAmount;
   }
 }

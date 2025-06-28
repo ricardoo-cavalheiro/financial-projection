@@ -1,6 +1,7 @@
 package com.example.financial_app.services;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.command.annotation.Option;
@@ -56,5 +57,20 @@ public class CardService {
       card.getName(), card.getLimitAmount(), card.getClosingDay(), card.getPaymentDay());
 
     return card;
+  }
+
+  @Command(command = "get-all-cards", description = "Get all cards")
+  public List<CardEntity> getAllCards() {
+    log.info("Retrieving all cards");
+
+    var cards = (List<CardEntity>) cardRepository.findAll();
+
+    if (!cards.iterator().hasNext()) {
+      log.info("No cards found");
+    } else {
+      cards.forEach(card -> log.info(card.toString()));
+    }
+
+    return cards;
   }
 }
