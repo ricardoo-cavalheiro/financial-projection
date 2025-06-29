@@ -1,6 +1,7 @@
 package com.example.financial_app.services;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.command.annotation.Option;
@@ -41,5 +42,11 @@ public class IncomeService {
     incomeRepository.save(income);
 
     log.info("Income added successfully!");
+  }
+
+  @Command(command = "get-all-incomes", description = "Retrieve all incomes")
+  public List<IncomeEntity> getAllIncomes() {
+    log.info("Retrieving all incomes");
+    return (List<IncomeEntity>) incomeRepository.findAll();
   }
 }

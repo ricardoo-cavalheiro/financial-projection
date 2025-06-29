@@ -57,15 +57,14 @@ public class InvoiceService {
         invoiceRepository.saveAll(invoices);
     }
 
-    @Command(command = "get-invoices", description = "Get next 12 months invoices.")
-    public List<InvoiceEntity> getInvoices(@Option(required = false) String cardName) {
+    public List<InvoiceEntity> getInvoices(String cardName, Integer months) {
         log.info("Retrieving invoices for the next 12 months.");
 
         var currentDate = LocalDate.now().withDayOfMonth(1);
-        var invoices = invoiceRepository.findAllByCardName(
+        var invoices = invoiceRepository.findAllByClosingDateAndCardName(
           currentDate,
           cardName, 
-          Limit.of(12), 
+          Limit.of(months),
           Sort.by(Sort.Direction.ASC, "closingDate")
         );
 
@@ -82,16 +81,10 @@ public class InvoiceService {
         return invoices;
     }
 
-    @Command(command = "get-invoice-by-date", description = "Get card invoice for the specified date.")
-    public InvoiceEntity getInvoiceByDate(
-      @Option(required = true) String cardName, 
-      @Option(required = true) LocalDate closingDate
-    ) {
-      log.info("Retrieving invoice for card '{}' and closing date '{}'", cardName, closingDate);
+    public InvoiceEntity getInvoiceByClosingDateAndCardName(LocalDate closingDate, String cardName) {
+      log.info("Retrieving invoice for closing date '{}'", closingDate);
 
-      var invoice = getInvoices(cardName).stream()
-          .filter(x -> x.getClosingDate().equals(closingDate))
-          .findFirst();
+      var invoice = invoiceRepository.findInvoiceByClosingDateAndCardName(closingDate, cardName);
 
       if (invoice.isEmpty()) {
         log.info("No invoice found for the specified closing date '{}'", closingDate);

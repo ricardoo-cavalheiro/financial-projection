@@ -114,3 +114,17 @@
 1751146971020:expenses-projection
 1751147419042:clear
 1751147761051:expenses-projection
+1751217679014:get-debit-expenses
+1751225963382:expenses-projection
+1751227086501:sample-ui
+1751227690933:expenses-projection
+1751228659724:clear
+1751228661114:expenses-projection
+1751228734837:clear
+1751228736683:expenses-projection
+1751231317761:get-all-incomes
+1751231360851:add-income --incomeName "Primeiro Salário" --amount 3200 --recurrenceDay 15
+1751231375501:add-income --incomeName "Primeiro Salário" --amount 3400 --recurrenceDay 31
+1751231378930:get-all-incomes
+1751231428616:clear
+1751231431408:expenses-projection

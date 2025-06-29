@@ -15,7 +15,8 @@ import com.example.financial_app.domain.entities.InvoiceEntity;
 @Repository
 public interface IInvoiceRepository extends CrudRepository<InvoiceEntity, Long> {
   @Query("SELECT i FROM InvoiceEntity i WHERE i.card.name = :cardName AND i.closingDate >= :startDate")
-  List<InvoiceEntity> findAllByCardName(LocalDate startDate, String cardName, Limit limit, Sort sort);
+  List<InvoiceEntity> findAllByClosingDateAndCardName(LocalDate startDate, String cardName, Limit limit, Sort sort);
 
-  Optional<InvoiceEntity> findByClosingDate(LocalDate closingDate);
+  @Query("SELECT i FROM InvoiceEntity i WHERE i.card.name = :cardName AND i.closingDate = :closingDate")
+  Optional<InvoiceEntity> findInvoiceByClosingDateAndCardName(LocalDate closingDate, String cardName);
 }

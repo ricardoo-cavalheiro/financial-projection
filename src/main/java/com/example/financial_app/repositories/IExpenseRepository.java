@@ -13,6 +13,25 @@ import com.example.financial_app.domain.entities.ExpenseEntity;
 
 @Repository
 public interface IExpenseRepository extends CrudRepository<ExpenseEntity, Long> {
-  @Query("SELECT e FROM ExpenseEntity e WHERE e.paymentType = 'DEBIT' AND e.paymentDate >= :startDate")
-  List<ExpenseEntity> findDebitExpenses(LocalDate startDate, Limit limit, Sort sort);
+  @Query("""
+    SELECT e FROM ExpenseEntity e 
+    WHERE e.paymentType = 'DEBIT' 
+      AND e.paymentDate >= :startDate
+      AND e.description LIKE %:description%""")
+  List<ExpenseEntity> findAllDebitExpensesByDescription(LocalDate startDate, String description, Limit limit, Sort sort);
+
+  @Query("""
+    SELECT DISTINCT (e.description) 
+    FROM ExpenseEntity e 
+    WHERE e.paymentType = 'DEBIT'
+      AND e.paymentDate >= :startDate
+      AND e.paymentDate <= :endDate""")
+  List<String> findAllDebitExpenses(LocalDate startDate, LocalDate endDate);
+
+  @Query("""
+    SELECT e FROM ExpenseEntity e 
+    WHERE e.paymentType = 'DEBIT' 
+      AND e.paymentDate >= :startDate
+      AND e.paymentDate <= :endDate""")
+  List<ExpenseEntity> findAllDebitExpensesByYearMonth(LocalDate startDate, LocalDate endDate);
 }
