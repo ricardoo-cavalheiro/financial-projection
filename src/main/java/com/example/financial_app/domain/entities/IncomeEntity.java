@@ -1,6 +1,7 @@
 package com.example.financial_app.domain.entities;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -33,8 +34,14 @@ public class IncomeEntity {
   @Column(name = "amount")
   private BigDecimal amount;
 
+  @Column(name = "payment_date")
+  private LocalDate paymentDate;
+
   @Column(name = "recurrence_day")
   private Integer recurrenceDay;
+
+  @Column(name = "is_recurring")
+  private Boolean isRecurring;
 
   @Column(name = "created_at")
   @CreationTimestamp

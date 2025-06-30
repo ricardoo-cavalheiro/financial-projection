@@ -1,6 +1,8 @@
 package com.example.financial_app.services;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 
 import org.springframework.shell.command.annotation.Command;
@@ -29,29 +31,32 @@ public class ProjectionService {
     log.info("Found {} cards for projection", cards.size());
 
     for (var i = 0; i < PROJECTION_MONTHS; i++) {
+      var totalOutAmount = BigDecimal.ZERO;
+      var totalInAmount = BigDecimal.ZERO;
       var currentMonthIteration = currentDate.plusMonths(i);
       log.info("Date: {}", DateTimeFormatter.ofPattern("MM/yyyy").format(currentMonthIteration));
 
-      var currentMonthIncomes = incomeService.getAllIncomes();
-
-      for (var income : currentMonthIncomes) {
-        log.info("Income: {}", income.getAmount());
-      }
+      totalInAmount = incomeService.sumMonthlyIncome(YearMonth.from(currentMonthIteration));
 
       var currentMonthDebitExpenses = expenseService.getAllDebitExpensesByDate(currentMonthIteration);
       var currentMonthDebtTotalAmount = expenseService.sumDebitExpenses(currentMonthDebitExpenses);
+      totalOutAmount = totalOutAmount.add(currentMonthDebtTotalAmount);
 
       log.info("Debit amount: {}", currentMonthDebtTotalAmount);
 
       for (var card : cards) {
         var currentMonthInvoice = invoiceService.getInvoiceByClosingDateAndCardName(
-          currentDate.withDayOfMonth(card.getClosingDay()),
+          currentMonthIteration.withDayOfMonth(card.getClosingDay()),
           card.getName()
         );
         
         var currentMonthInvoiceTotalAmount = invoiceService.sumInvoiceExpenses(currentMonthInvoice);
+        totalOutAmount = totalOutAmount.add(currentMonthInvoiceTotalAmount);
         log.info("Card: {} | Invoice amount: {}", card.getName(), currentMonthInvoiceTotalAmount);
       }
+
+      log.info("TOTAL IN: {}", totalInAmount);
+      log.info("TOTAL OUT: {}", totalOutAmount);
     }
   }
 }
