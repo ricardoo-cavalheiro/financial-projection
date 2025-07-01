@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Limit;
 import org.springframework.data.domain.Sort;
@@ -95,17 +96,19 @@ public class InvoiceService {
       log.info("Invoice amount updated successfully for ID: {}", id);
     }
 
-    public InvoiceEntity getInvoiceByClosingDateAndCardName(LocalDate closingDate, String cardName) {
+    public Optional<InvoiceEntity> getInvoiceByClosingDateAndCardName(LocalDate closingDate, String cardName) {
       log.info("Retrieving invoice for closing date '{}'", closingDate);
 
       var invoice = invoiceRepository.findInvoiceByClosingDateAndCardName(closingDate, cardName);
 
       if (invoice.isEmpty()) {
         log.info("No invoice found for the specified closing date '{}'", closingDate);
+
+        return Optional.empty();
       }
 
       log.info("Invoice found: {}", invoice.get());
-      return invoice.get();
+      return invoice;
     }
 
     public BigDecimal sumInvoiceExpenses(InvoiceEntity invoice) {

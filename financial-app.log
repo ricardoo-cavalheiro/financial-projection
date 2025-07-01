@@ -261,3 +261,8 @@
 1751323108063:expenses-projection
 1751323191606:clear
 1751323192851:expenses-projection
+1751392004928:add-one-time-income --incomeName "Receita Federal" --amount 1258.91 --paymentDate 2025-07-01
+1751392008640:clear
+1751392010786:expenses-projection
+1751392044714:stacktrace
+1751393418950:expenses-projection
