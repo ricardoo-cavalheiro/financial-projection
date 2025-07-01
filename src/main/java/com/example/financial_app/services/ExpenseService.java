@@ -52,6 +52,7 @@ public class ExpenseService {
           .amount(amount)
           .paymentType(PaymentTypeEnum.DEBIT)
           .isRecurring(Boolean.TRUE)
+          .isIgnored(Boolean.FALSE)
           .isPaid(currentIterationMonth.isBefore(currentDate) || currentIterationMonth.isEqual(currentDate))
           .paymentDate(currentIterationMonth)
           .build();
@@ -81,6 +82,7 @@ public class ExpenseService {
         .amount(amount)
         .paymentType(PaymentTypeEnum.DEBIT)
         .isRecurring(Boolean.FALSE)
+        .isIgnored(Boolean.FALSE)
         .isPaid(paymentDate.isBefore(currentDate) || paymentDate.isEqual(currentDate))
         .paymentDate(paymentDate)
         .build();
@@ -131,6 +133,7 @@ public class ExpenseService {
           .amount(amount)
           .paymentType(PaymentTypeEnum.CREDIT)
           .isRecurring(Boolean.TRUE)
+          .isIgnored(Boolean.FALSE)
           .card(card)
           .invoice(currentMonthInvoice.get())
           .isPaid(currentIterationMonth.isBefore(currentDate) || currentIterationMonth.isEqual(currentDate))
@@ -176,6 +179,7 @@ public class ExpenseService {
         .amount(amount)
         .paymentType(PaymentTypeEnum.CREDIT)
         .isRecurring(Boolean.FALSE)
+        .isIgnored(Boolean.FALSE)
         .card(card)
         .invoice(currentMonthInvoice.get())
         .isPaid(paymentDate.isBefore(currentDate) || paymentDate.isEqual(currentDate))

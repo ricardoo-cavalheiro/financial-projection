@@ -37,7 +37,7 @@ public class ProjectionService {
 
       var incomes = incomeService.getAllByPaymentDate(YearMonth.of(currentMonthIteration.getYear(), currentMonthIteration.getMonth()));
       for (var income : incomes) {
-        log.info("Date: {} | Income: {} | Amount: {}", income.getPaymentDate(), income.getDescription(), income.getAmount());
+        log.info("Date: {} | Income: {} | Amount: R${}", income.getPaymentDate(), income.getDescription(), income.getAmount());
       }
 
       totalInAmount = incomeService.sumMonthlyIncome(YearMonth.from(currentMonthIteration));
@@ -46,7 +46,7 @@ public class ProjectionService {
       var currentMonthDebtTotalAmount = expenseService.sumDebitExpenses(currentMonthDebitExpenses);
       totalOutAmount = totalOutAmount.add(currentMonthDebtTotalAmount);
 
-      log.info("Date: {} | Debit amount: {}", currentMonthIteration, currentMonthDebtTotalAmount);
+      log.info("Date: {} | Debit amount: R${}", currentMonthIteration, currentMonthDebtTotalAmount);
 
       for (var card : cards) {
         var currentMonthInvoice = invoiceService.getInvoiceByClosingDateAndCardName(
@@ -62,15 +62,15 @@ public class ProjectionService {
         var currentMonthInvoiceTotalAmount = invoiceService.sumInvoiceExpenses(currentMonthInvoice.get());
         totalOutAmount = totalOutAmount.add(currentMonthInvoiceTotalAmount);
         log.info(
-          "Date: {} | Card: {} | Invoice amount: {}", 
+          "Date: {} | Card: {} | Invoice amount: R${}", 
           currentMonthIteration.withDayOfMonth(card.getPaymentDay()), 
           card.getName(), 
           currentMonthInvoiceTotalAmount
         );
       }
 
-      log.info("TOTAL IN: {}", totalInAmount);
-      log.info("TOTAL OUT: {}", totalOutAmount);
+      log.info("TOTAL IN: R${}", totalInAmount);
+      log.info("TOTAL OUT: R${}", totalOutAmount);
     }
   }
 }

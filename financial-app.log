@@ -266,3 +266,31 @@
 1751392010786:expenses-projection
 1751392044714:stacktrace
 1751393418950:expenses-projection
+1751400507412:add-onetime-debit-expense --expenseName "faculdade" --amount 252.6 --paymentDate 2025-07-01
+1751400520732:expenses-projection
+1751400750152:clear
+1751400751466:create-invoices --months 12 --cardName "Mercado Pago"
+1751400755300:create-invoices --months 12 --cardName "Nubank"
+1751400759844:add-recurring-income --incomeName "Salário final do mês" --amount 3576.78 --recurrenceDay 31
+1751400766873:add-recurring-income --incomeName "Salário meio do mês" --amount 3200 --recurrenceDay 15
+1751400782021:add-one-time-income --incomeName "Receita Federal" --amount 1258.91 --paymentDate 2025-07-01
+1751400794467:add-one-time-income --incomeName "13 salário" --amount 4000 --paymentDate 2025-07-01
+1751400800689:add-recurring-debit-expense --expenseName "Mãe" --amount 600 --paymentDay 1
+1751400965675:add-recurring-debit-expense --expenseName "Vera" --amount 600 --paymentDay 1
+1751400970247:add-recurring-debit-expense --expenseName "Conta água" --amount 150 --paymentDay 1
+1751400974143:add-recurring-debit-expense --expenseName "Conta luz" --amount 150 --paymentDay 1
+1751400978481:add-recurring-credit-expense --expenseName "Spotify" --amount 27.9  --paymentDay 10 --cardName "Mercado Pago" --totalInstallments 12 --installmentNumber 1
+1751400984005:add-recurring-credit-expense --expenseName "YoutTube Premium" --amount 16.9  --paymentDay 18 --cardName "Mercado Pago" --totalInstallments 12 --installmentNumber 1
+1751400989278:add-recurring-credit-expense --expenseName "Ração pet" --amount 300  --paymentDay 1 --cardName "Mercado Pago" --totalInstallments 12 --installmentNumber 1
+1751400993968:add-recurring-credit-expense --expenseName "Cestto" --amount 800 --paymentDay 5 --cardName "Mercado Pago" --totalInstallments 12 --installmentNumber 1
+1751400999119:add-recurring-credit-expense --expenseName "Wi-Fi" --amount 180 --paymentDay 20 --cardName "Mercado Pago" --totalInstallments 12 --installmentNumber 1
+1751401003988:add-recurring-credit-expense --expenseName "Faculdade" --amount 256.9 --paymentDay 10 --cardName "Mercado Pago" --totalInstallments 12 --installmentNumber 1
+1751401008578:add-recurring-credit-expense --expenseName "Anel Silvana" --amount 297 --paymentDay 15 --cardName "Mercado Pago" --totalInstallments 12 --installmentNumber 3
+1751401013396:add-recurring-credit-expense --expenseName "babá eletronica" --amount 26.08 --paymentDay 3 --cardName "Mercado Pago" --totalInstallments 12 --installmentNumber 10
+1751401018560:add-recurring-credit-expense --expenseName "OpenAI" --amount 99.9  --paymentDay 3 --cardName "Nubank" --totalInstallments 12 --installmentNumber 10
+1751401023015:add-recurring-credit-expense --expenseName "TotalPass (meu)" --amount 109.9  --paymentDay 8 --cardName "Nubank" --totalInstallments 12 --installmentNumber 10
+1751401027664:add-recurring-credit-expense --expenseName "TotalPass (Silvana)" --amount 119.9  --paymentDay 5 --cardName "Nubank" --totalInstallments 12 --installmentNumber 10
+1751401031953:add-recurring-credit-expense --expenseName "Emprestimo Silvana" --amount 141.59 --paymentDay 11 --cardName "Nubank" --totalInstallments 11 --installmentNumber 9
+1751401037140:add-recurring-credit-expense --expenseName "Anel noivado" --amount 300 --paymentDay 15 --cardName "Nubank" --totalInstallments 10 --installmentNumber 6
+1751401058864:add-recurring-debit-expense --expenseName "Faculdade" --amount 252.6 --paymentDay 1
+1751401068967:expenses-projection

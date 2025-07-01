@@ -120,6 +120,7 @@ public class InvoiceService {
         }
 
         var totalAmount = invoice.getExpenses().stream()
+            .filter(expense -> !expense.getIsIgnored())
             .filter(expense -> expense.getPaymentType().equals(PaymentTypeEnum.CREDIT))
             .map(ExpenseEntity::getAmount)
             .reduce(BigDecimal.ZERO, BigDecimal::add);

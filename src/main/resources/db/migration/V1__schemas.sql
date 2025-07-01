@@ -24,6 +24,7 @@ CREATE TABLE expense (
   description         TEXT          NOT NULL,
   amount              NUMERIC(10,2) NOT NULL CHECK (amount >= 0),
   payment_type        expense_kind  NOT NULL,
+  is_ignored          BOOLEAN       NOT NULL DEFAULT FALSE, -- se o gasto deve ser ignorado no cálculo do saldo (por que foi pago via débito, por exemplo)
   is_recurring        BOOLEAN       NOT NULL DEFAULT FALSE,
   is_paid             BOOLEAN       NOT NULL DEFAULT FALSE,
   invoice_id          INT           NULL REFERENCES invoice(id) ON DELETE SET NULL,

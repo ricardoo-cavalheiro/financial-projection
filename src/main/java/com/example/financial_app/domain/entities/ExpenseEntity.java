@@ -67,6 +67,9 @@ public class ExpenseEntity {
   @CreationTimestamp
   private LocalDateTime createdAt;
 
+  @Column(name = "is_ignored")
+  private Boolean isIgnored;
+
   @ManyToOne
   @JoinColumn(name = "card_id")
   private CardEntity card;
