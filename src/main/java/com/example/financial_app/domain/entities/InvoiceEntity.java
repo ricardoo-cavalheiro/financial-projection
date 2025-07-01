@@ -46,6 +46,9 @@ public class InvoiceEntity {
   @Column(name = "payment_date")
   private LocalDate paymentDate;
 
+  @Column(name = "was_manually_added")
+  private Boolean wasManuallyAdded;
+
   @Column(name = "created_at")
   @CreationTimestamp
   private LocalDateTime createdAt;

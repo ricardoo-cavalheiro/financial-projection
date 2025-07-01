@@ -2,7 +2,6 @@ package com.example.financial_app.services;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.Year;
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,9 +10,7 @@ import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.command.annotation.Option;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.financial_app.domain.entities.ExpenseEntity;
 import com.example.financial_app.domain.entities.IncomeEntity;
-import com.example.financial_app.domain.enums.PaymentTypeEnum;
 import com.example.financial_app.repositories.IIncomeRepository;
 
 import jakarta.validation.constraints.Min;
@@ -91,15 +88,17 @@ public class IncomeService {
   public BigDecimal sumMonthlyIncome(YearMonth referenceDate) {
     log.info("Calculating total income for month: {}", referenceDate);
     
-    var totalIncome = incomeRepository.findAllByPaymentDateBetween(
-      referenceDate.atDay(1), 
-      referenceDate.atEndOfMonth()
-    ).stream()
+    var totalIncome = getAllByPaymentDate(referenceDate).stream()
       .map(IncomeEntity::getAmount)
       .reduce(BigDecimal.ZERO, BigDecimal::add);
 
     log.info("Total income for {}: {}", referenceDate, totalIncome);
     return totalIncome;
+  }
+
+  public List<IncomeEntity> getAllByPaymentDate(YearMonth referenceDate) {
+    log.info("Retrieving income for month: {}", referenceDate);
+    return incomeRepository.findAllByPaymentDateBetween(referenceDate.atDay(1), referenceDate.atEndOfMonth());
   }
 
   @Command(command = "get-all-incomes", description = "Retrieve all incomes")

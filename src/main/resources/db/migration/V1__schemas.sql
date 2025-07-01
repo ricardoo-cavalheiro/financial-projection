@@ -7,13 +7,14 @@ CREATE TABLE card (
 );
 
 CREATE TABLE invoice (
-  id              SERIAL        PRIMARY KEY,
-  card_id         INT           NOT NULL REFERENCES card(id) ON DELETE CASCADE,
-  amount          NUMERIC(10,2) NOT NULL DEFAULT 0 CHECK (amount >= 0),
-  closing_date    DATE          NOT NULL,
-  payment_date    DATE          NOT NULL,
-  is_paid         BOOLEAN       NOT NULL DEFAULT FALSE,
-  created_at      TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP
+  id                 SERIAL        PRIMARY KEY,
+  card_id            INT           NOT NULL REFERENCES card(id) ON DELETE CASCADE,
+  amount             NUMERIC(10,2) NOT NULL DEFAULT 0 CHECK (amount >= 0),
+  closing_date       DATE          NOT NULL,
+  payment_date       DATE          NOT NULL,
+  is_paid            BOOLEAN       NOT NULL DEFAULT FALSE,
+  was_manually_added BOOLEAN        NOT NULL DEFAULT FALSE,
+  created_at         TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TYPE expense_kind AS ENUM ('CREDIT', 'DEBIT');
@@ -34,11 +35,11 @@ CREATE TABLE expense (
 );
 
 CREATE TABLE income (
-  id               SERIAL         PRIMARY KEY,
-  description      TEXT           NOT NULL,
-  amount           NUMERIC(12,2)  NOT NULL CHECK (amount >= 0),
-  payment_date     TIMESTAMP      NULL,
-  recurrence_day   SMALLINT       NULL, -- dia do mês em que a entrada acontece
-  is_recurring     BOOLEAN        NOT NULL DEFAULT FALSE,
-  created_at       TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP
+  id                 SERIAL         PRIMARY KEY,
+  description        TEXT           NOT NULL,
+  amount             NUMERIC(12,2)  NOT NULL CHECK (amount >= 0),
+  payment_date       TIMESTAMP      NULL,
+  recurrence_day     SMALLINT       NULL, -- dia do mês em que a entrada acontece
+  is_recurring       BOOLEAN        NOT NULL DEFAULT FALSE,
+  created_at         TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

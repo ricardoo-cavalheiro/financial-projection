@@ -3,7 +3,6 @@ package com.example.financial_app.services;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.YearMonth;
-import java.time.format.DateTimeFormatter;
 
 import org.springframework.shell.command.annotation.Command;
 
@@ -33,8 +32,12 @@ public class ProjectionService {
     for (var i = 0; i < PROJECTION_MONTHS; i++) {
       var totalOutAmount = BigDecimal.ZERO;
       var totalInAmount = BigDecimal.ZERO;
-      var currentMonthIteration = currentDate.plusMonths(i);
-      log.info("Date: {}", DateTimeFormatter.ofPattern("MM/yyyy").format(currentMonthIteration));
+      var currentMonthIteration = currentDate.plusMonths(i).withDayOfMonth(1);
+
+      var incomes = incomeService.getAllByPaymentDate(YearMonth.of(currentMonthIteration.getYear(), currentMonthIteration.getMonth()));
+      for (var income : incomes) {
+        log.info("Date: {} | Income: {} | Amount: {}", income.getPaymentDate(), income.getDescription(), income.getAmount());
+      }
 
       totalInAmount = incomeService.sumMonthlyIncome(YearMonth.from(currentMonthIteration));
 
@@ -42,7 +45,7 @@ public class ProjectionService {
       var currentMonthDebtTotalAmount = expenseService.sumDebitExpenses(currentMonthDebitExpenses);
       totalOutAmount = totalOutAmount.add(currentMonthDebtTotalAmount);
 
-      log.info("Debit amount: {}", currentMonthDebtTotalAmount);
+      log.info("Date: {} | Debit amount: {}", currentMonthIteration, currentMonthDebtTotalAmount);
 
       for (var card : cards) {
         var currentMonthInvoice = invoiceService.getInvoiceByClosingDateAndCardName(
@@ -52,7 +55,12 @@ public class ProjectionService {
         
         var currentMonthInvoiceTotalAmount = invoiceService.sumInvoiceExpenses(currentMonthInvoice);
         totalOutAmount = totalOutAmount.add(currentMonthInvoiceTotalAmount);
-        log.info("Card: {} | Invoice amount: {}", card.getName(), currentMonthInvoiceTotalAmount);
+        log.info(
+          "Date: {} | Card: {} | Invoice amount: {}", 
+          currentMonthIteration.withDayOfMonth(card.getPaymentDay()), 
+          card.getName(), 
+          currentMonthInvoiceTotalAmount
+        );
       }
 
       log.info("TOTAL IN: {}", totalInAmount);

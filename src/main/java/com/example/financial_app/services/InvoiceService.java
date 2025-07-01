@@ -48,6 +48,7 @@ public class InvoiceService {
               .isPaid(currentDate.isAfter(closingDate))
               .closingDate(closingDate)
               .paymentDate(paymentDate)
+              .wasManuallyAdded(Boolean.FALSE)
               .build();
 
           invoices.add(invoice);
@@ -81,6 +82,19 @@ public class InvoiceService {
         return invoices;
     }
 
+    public void replaceInvoiceAmountById(String id, BigDecimal amount) {
+      log.info("Replacing invoice amount for ID: {}", id);
+
+      var invoice = invoiceRepository.findById(Long.parseLong(id))
+          .orElseThrow(() -> new IllegalArgumentException("Invoice not found with ID: " + id));
+
+      invoice.setAmount(amount);
+      invoice.setWasManuallyAdded(Boolean.TRUE);
+      invoiceRepository.save(invoice);
+
+      log.info("Invoice amount updated successfully for ID: {}", id);
+    }
+
     public InvoiceEntity getInvoiceByClosingDateAndCardName(LocalDate closingDate, String cardName) {
       log.info("Retrieving invoice for closing date '{}'", closingDate);
 
@@ -97,13 +111,17 @@ public class InvoiceService {
     public BigDecimal sumInvoiceExpenses(InvoiceEntity invoice) {
         log.info("Summing expenses for card '{}'", invoice.getCard().getName());
 
+        if (invoice.getWasManuallyAdded()) {
+          log.info("Invoice was manually altered");
+          return invoice.getAmount();
+        }
+
         var totalAmount = invoice.getExpenses().stream()
             .filter(expense -> expense.getPaymentType().equals(PaymentTypeEnum.CREDIT))
             .map(ExpenseEntity::getAmount)
             .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         invoice.setAmount(totalAmount);
-
         invoiceRepository.save(invoice);
 
         log.info("Total amount for invoice ID {}: {}", invoice.getId(), totalAmount);
