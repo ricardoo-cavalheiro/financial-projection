@@ -294,3 +294,12 @@
 1751401037140:add-recurring-credit-expense --expenseName "Anel noivado" --amount 300 --paymentDay 15 --cardName "Nubank" --totalInstallments 10 --installmentNumber 6
 1751401058864:add-recurring-debit-expense --expenseName "Faculdade" --amount 252.6 --paymentDay 1
 1751401068967:expenses-projection
+1751486469659:add-onetime-debit-expense --expenseName "Fruteira" --amount 21.21 --paymentDate 2025-07-02
+1751486662123:add-onetime-debit-expense --expenseName "Creatina" --amount 144.63 --paymentDate 2025-07-02
+1751486665475:expenses-projection
+1751492547644:Opns-rjco
+1751492567293:expenses-projection
+1751503951333:add-one-time-income --incomeName "João (Creatina)" --amount 64.9 --paymentDate 2025-07-02
+1751504007953:add-onetime-debit-expense --expenseName "Empadas (Cestto)" --amount 21 --paymentDate 2025-07-02
+1751504022495:add-onetime-debit-expense --expenseName "Cestto" --amount 78.67 --paymentDate 2025-07-02
+1751504030012:expenses-projection

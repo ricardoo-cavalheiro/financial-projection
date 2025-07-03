@@ -71,6 +71,7 @@ public class ProjectionService {
 
       log.info("TOTAL IN: R${}", totalInAmount);
       log.info("TOTAL OUT: R${}", totalOutAmount);
+      log.info("DIFFERENCE: R${}", totalInAmount.subtract(totalOutAmount));
     }
   }
 }

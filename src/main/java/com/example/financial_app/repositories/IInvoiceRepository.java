@@ -8,6 +8,7 @@ import org.springframework.data.domain.Limit;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
 
 import com.example.financial_app.domain.entities.InvoiceEntity;
@@ -20,5 +21,5 @@ public interface IInvoiceRepository extends CrudRepository<InvoiceEntity, Long> 
   @Query("SELECT i FROM InvoiceEntity i WHERE i.card.name = :cardName AND i.closingDate = :closingDate")
   Optional<InvoiceEntity> findInvoiceByClosingDateAndCardName(LocalDate closingDate, String cardName);
 
-  Optional<InvoiceEntity> findById(Long id);
+  @NonNull Optional<InvoiceEntity> findById(@NonNull Long id);
 }
