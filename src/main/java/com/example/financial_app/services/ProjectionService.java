@@ -3,7 +3,6 @@ package com.example.financial_app.services;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.YearMonth;
-import java.util.Optional;
 
 import org.springframework.shell.command.annotation.Command;
 
@@ -53,13 +52,8 @@ public class ProjectionService {
           currentMonthIteration.withDayOfMonth(card.getClosingDay()),
           card.getName()
         );
-
-        if (currentMonthInvoice.equals(Optional.empty())) {
-          log.warn("No invoice found for card: {} on date: {}", card.getName(), currentMonthIteration);
-          continue;
-        }
         
-        var currentMonthInvoiceTotalAmount = invoiceService.sumInvoiceExpenses(currentMonthInvoice.get());
+        var currentMonthInvoiceTotalAmount = invoiceService.sumInvoiceExpenses(currentMonthInvoice);
         totalOutAmount = totalOutAmount.add(currentMonthInvoiceTotalAmount);
         log.info(
           "Date: {} | Card: {} | Invoice amount: R${}", 

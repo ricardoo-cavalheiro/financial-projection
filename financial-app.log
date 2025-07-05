@@ -303,3 +303,21 @@
 1751504007953:add-onetime-debit-expense --expenseName "Empadas (Cestto)" --amount 21 --paymentDate 2025-07-02
 1751504022495:add-onetime-debit-expense --expenseName "Cestto" --amount 78.67 --paymentDate 2025-07-02
 1751504030012:expenses-projection
+1751664380210:add-onetime-debit-expense --expenseName "Maby" --amount "32.05" --paymentDate 2025-07-04
+1751727321695:set-invoice-paid --cardName "Nubank" --closingDate 2025-07-03 --isPaid true
+1751728931918:add-recurring-credit-expense --expenseName "Livro" --amount 104.95 --paymentDay 4 --cardName "Nubank" --totalInstallments 2 --installmentNumber 1
+1751729000508:expenses-projection
+1751729503087:add-onetime-credit-expense --expenseName "Fruteira" --amount 21.21 --paymentDate 2025-07-02 --cardName "Nubank"
+1751729549286:add-onetime-credit-expense --expenseName "Empadas (Cestto)" --amount 21 --paymentDate 2025-07-02 --cardName "Nubank"
+1751729562491:add-onetime-credit-expense --expenseName "Cestto" --amount 78.67 --paymentDate 2025-07-02 --cardName "Nubank"
+1751729584956:add-onetime-credit-expense --expenseName "Maby" --amount 32.05 --paymentDate 2025-07-04 --cardName "Nubank"
+1751729624190:add-onetime-debit-expense --expenseName "Creatina" --amount 144.63 --paymentDate 2025-07-02
+1751729627891:expenses-projection
+1751731276830:clear
+1751731277650:expenses-projection
+1751732438576:clear
+1751732439348:expenses-projection
+1751732525562:clear
+1751732527322:expenses-projection
+1751732732474:clear
+1751732744523:expenses-projection

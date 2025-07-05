@@ -19,7 +19,8 @@ public interface IInvoiceRepository extends CrudRepository<InvoiceEntity, Long> 
   List<InvoiceEntity> findAllByClosingDateAndCardName(LocalDate startDate, String cardName, Limit limit, Sort sort);
 
   @Query("SELECT i FROM InvoiceEntity i WHERE i.card.name = :cardName AND i.closingDate = :closingDate")
-  Optional<InvoiceEntity> findInvoiceByClosingDateAndCardName(LocalDate closingDate, String cardName);
+  Optional<InvoiceEntity> findByClosingDateAndCardName(LocalDate closingDate, String cardName);
 
-  @NonNull Optional<InvoiceEntity> findById(@NonNull Long id);
+  @NonNull
+  Optional<InvoiceEntity> findById(@NonNull Long id);
 }

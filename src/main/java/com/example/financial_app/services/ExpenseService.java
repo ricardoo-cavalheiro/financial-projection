@@ -112,20 +112,24 @@ public class ExpenseService {
 
     var currentDate = LocalDate.now();
     var expenses = new ArrayList<ExpenseEntity>();
-    for (int i = 0; i < totalInstallments; i++) {
-      var currentIterationMonth = currentDate.withDayOfMonth(paymentDay).plusMonths(i);
+
+    var monthsChecked = 0;
+    var installmentsAdded = 0;
+    while (installmentsAdded < totalInstallments) {
+      var currentIterationMonth = currentDate.withDayOfMonth(paymentDay).plusMonths(monthsChecked);
       var currentIterationInvoiceDate = currentIterationMonth.withDayOfMonth(card.getClosingDay());
       var currentMonthInvoice = invoiceService.getInvoiceByClosingDateAndCardName(currentIterationInvoiceDate, cardName);
 
-      if (currentMonthInvoice.isEmpty()) {
-        log.warn("No invoice found for card: {} on date: {}", cardName, currentIterationInvoiceDate);
-        continue; // Skip this iteration if no invoice is found
+      if (currentMonthInvoice.getIsPaid()) {
+        log.warn("Invoice for {} is already paid. Skipping expense creation for this month.", currentMonthInvoice.getClosingDate());
+        monthsChecked++;
+        continue; // Skip if the invoice is already paid
       }
 
-      var installmentNumberForCurrentIteration = installmentNumber + i;
+      var installmentNumberForCurrentIteration = installmentNumber + installmentsAdded;
 
       if (installmentNumberForCurrentIteration > totalInstallments) {
-        continue; // No need to add expense if it's the last installment
+        break; // No need to add expense if it's the last installment
       }
 
       var expense = ExpenseEntity.builder()
@@ -135,7 +139,7 @@ public class ExpenseService {
           .isRecurring(Boolean.TRUE)
           .isIgnored(Boolean.FALSE)
           .card(card)
-          .invoice(currentMonthInvoice.get())
+          .invoice(currentMonthInvoice)
           .isPaid(currentIterationMonth.isBefore(currentDate) || currentIterationMonth.isEqual(currentDate))
           .paymentDate(currentIterationMonth)
           .totalInstallments(totalInstallments)
@@ -143,6 +147,8 @@ public class ExpenseService {
           .build();
 
       expenses.add(expense);
+      installmentsAdded++;
+      monthsChecked++;
     }
 
     expenseRepository.saveAll(expenses);
@@ -169,9 +175,11 @@ public class ExpenseService {
       cardName
     );
 
-    if (currentMonthInvoice.isEmpty()) {
-      log.warn("No invoice found for card: {} on date: {}", cardName, currentDate);
-      return; // Exit if no invoice is found
+    if (currentMonthInvoice.getIsPaid()) {
+      currentMonthInvoice = invoiceService.getInvoiceByClosingDateAndCardName(
+        currentDate.plusMonths(1).withDayOfMonth(card.getClosingDay()),
+        cardName
+      );
     }
 
     var expense = ExpenseEntity.builder()
@@ -181,7 +189,7 @@ public class ExpenseService {
         .isRecurring(Boolean.FALSE)
         .isIgnored(Boolean.FALSE)
         .card(card)
-        .invoice(currentMonthInvoice.get())
+        .invoice(currentMonthInvoice)
         .isPaid(paymentDate.isBefore(currentDate) || paymentDate.isEqual(currentDate))
         .paymentDate(paymentDate)
         .build();
