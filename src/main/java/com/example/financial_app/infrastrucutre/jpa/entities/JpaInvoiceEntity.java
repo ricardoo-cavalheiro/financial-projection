@@ -7,8 +7,6 @@ import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
 
-import com.example.financial_app.domain.entities.CardEntity;
-import com.example.financial_app.domain.entities.ExpenseEntity;
 import com.example.financial_app.domain.entities.InvoiceEntity;
 
 import jakarta.persistence.Column;
@@ -20,7 +18,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import lombok.ToString;
 
 @Entity(name = "InvoiceEntity")
 @Table(name = "invoice")
@@ -50,7 +47,7 @@ public class JpaInvoiceEntity extends InvoiceEntity {
 
   @ManyToOne
   @JoinColumn(name = "card_id")
-  private CardEntity card;
+  private JpaCardEntity card;
 
   @OneToMany(mappedBy = "invoice")
   private List<JpaExpenseEntity> expenses;  

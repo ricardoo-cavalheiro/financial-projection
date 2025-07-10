@@ -2,14 +2,13 @@ package com.example.financial_app.domain.dao;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Limit;
 import org.springframework.data.domain.Sort;
-import org.springframework.stereotype.Repository;
 
 import com.example.financial_app.domain.entities.ExpenseEntity;
 
-@Repository
 public interface IExpenseRepository {
   List<ExpenseEntity> findAllDebitExpensesByDescription(LocalDate startDate, String description, Limit limit, Sort sort);
 
@@ -20,4 +19,8 @@ public interface IExpenseRepository {
   List<ExpenseEntity> saveAll(List<ExpenseEntity> expenses);
 
   ExpenseEntity save(ExpenseEntity expense);
+
+  List<ExpenseEntity> findAll();
+
+  Optional<ExpenseEntity> findById(Long id);
 }
