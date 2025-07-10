@@ -10,8 +10,9 @@ import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.command.annotation.Option;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.financial_app.domain.dao.IIncomeRepository;
 import com.example.financial_app.domain.entities.IncomeEntity;
-import com.example.financial_app.repositories.IIncomeRepository;
+import com.example.financial_app.domain.services.IIncomeService;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
@@ -22,7 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional
 @Command(group = "Income", description = "Commands related to income management")
 @RequiredArgsConstructor
-public class IncomeService {
+public class IncomeService implements IIncomeService {
   private final IIncomeRepository incomeRepository;
 
   @Command(command = "add-recurring-income", description = "Add a new recurring income")

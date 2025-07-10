@@ -7,8 +7,9 @@ import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.command.annotation.Option;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.financial_app.domain.dao.ICardRepository;
 import com.example.financial_app.domain.entities.CardEntity;
-import com.example.financial_app.repositories.ICardRepository;
+import com.example.financial_app.domain.services.ICardService;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
@@ -19,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional
 @Command(group = "Card", description = "Commands related to card management")
 @RequiredArgsConstructor
-public class CardService {
+public class CardService implements ICardService {
   private final ICardRepository cardRepository;
 
   @Command(command = "create-card", description = "Create a new card")

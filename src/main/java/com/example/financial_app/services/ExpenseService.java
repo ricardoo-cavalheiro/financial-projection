@@ -12,9 +12,11 @@ import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.command.annotation.Option;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.financial_app.domain.dao.IExpenseRepository;
 import com.example.financial_app.domain.entities.ExpenseEntity;
 import com.example.financial_app.domain.enums.PaymentTypeEnum;
-import com.example.financial_app.repositories.IExpenseRepository;
+import com.example.financial_app.domain.services.IExpenseService;
+import com.example.financial_app.domain.services.IInvoiceService;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -26,9 +28,9 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional
 @Command(group = "Expense", description = "Commands related to expense management.")
 @RequiredArgsConstructor
-public class ExpenseService {
+public class ExpenseService implements IExpenseService {
   private final CardService cardService;
-  private final InvoiceService invoiceService;
+  private final IInvoiceService invoiceService;
   private final IExpenseRepository expenseRepository;
 
   @Command(command = "add-recurring-debit-expense", description = "Add a new recurring debit expense.")

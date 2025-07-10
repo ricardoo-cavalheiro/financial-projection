@@ -321,3 +321,23 @@
 1751732527322:expenses-projection
 1751732732474:clear
 1751732744523:expenses-projection
+1751898677402:add-recurring-credit-expense --expenseName "Veterinario" --amount 296.6 --paymentDay 7 --cardName "Nubank" --totalInstallments 3 --installmentNumber 1
+1751898682442:expenses-projection
+1751898702607:clear
+1751898703607:expenses-projection
+1751898705169:clear
+1751898828894:add-onetime-credit-expense --expenseName "Pasta Amendoim" --amount 49.23 --paymentDate 2025-07-06 --cardName "Nubank"
+1751898853336:add-onetime-credit-expense --expenseName "Ifood" --amount 64.89 --paymentDate 2025-07-05 --cardName "Nubank"
+1751898855817:expenses-projection
+1751899442025:add-recurring-credit-expense --expenseName "Veterinario test" --amount 296.6 --paymentDay 7 --cardName "Nubank" --totalInstallments 3 --installmentNumber 1
+1751900175361:expenses-projection
+1751991694005:add-one-time-income --incomeName "Vera (Anel Formatura)" --amount 300 --paymentDate 2025-07-06
+1751991705213:add-one-time-income --incomeName "Anel Formatura" --amount 300 --paymentDate 2025-07-06
+1751991708318:expenses-projection
+1752071668077:create-card --cardName "BTG" --limitAmount 3000 --closingDay 11 --paymentDay 15
+1752071735402:add-onetime-credit-expense --expenseName "Uber" --amount 11.92 --paymentDate 2025-07-09 --cardName "BTG"
+1752071764003:create-invoices --months 12 --cardName "BTG"
+1752071765596:add-onetime-credit-expense --expenseName "Uber" --amount 11.92 --paymentDate 2025-07-09 --cardName "BTG"
+1752071780283:add-onetime-credit-expense --expenseName "Uber" --amount 15.96 --paymentDate 2025-07-09 --cardName "BTG"
+1752071783904:clear
+1752071786724:expenses-projection

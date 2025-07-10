@@ -10,10 +10,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.command.annotation.Option;
 
+import com.example.financial_app.domain.dao.IInvoiceRepository;
 import com.example.financial_app.domain.entities.ExpenseEntity;
 import com.example.financial_app.domain.entities.InvoiceEntity;
 import com.example.financial_app.domain.enums.PaymentTypeEnum;
-import com.example.financial_app.repositories.IInvoiceRepository;
+import com.example.financial_app.domain.services.ICardService;
+import com.example.financial_app.domain.services.IInvoiceService;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -23,9 +25,9 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional
 @Command(group = "Invoice", description = "Commands related to invoice management.")
 @RequiredArgsConstructor
-public class InvoiceService {
+public class InvoiceService implements IInvoiceService {
   private final IInvoiceRepository invoiceRepository;
-  private final CardService cardService;
+  private final ICardService cardService;
 
   @Command(command = "create-invoices", description = "Create a new invoice.")
   public void createInvoice(

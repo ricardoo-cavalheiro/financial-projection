@@ -3,6 +3,8 @@ package com.example.financial_app.services;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.YearMonth;
+import java.util.HashMap;
+import java.util.List;
 
 import org.springframework.shell.command.annotation.Command;
 
@@ -29,12 +31,15 @@ public class ProjectionService {
 
     log.info("Found {} cards for projection", cards.size());
 
+    var orderedIncomesAndExpenses = new HashMap<String, List<String>>();
     for (var i = 0; i < PROJECTION_MONTHS; i++) {
       var totalOutAmount = BigDecimal.ZERO;
       var totalInAmount = BigDecimal.ZERO;
       var currentMonthIteration = currentDate.plusMonths(i).withDayOfMonth(1);
 
-      var incomes = incomeService.getAllByPaymentDate(YearMonth.of(currentMonthIteration.getYear(), currentMonthIteration.getMonth()));
+      var incomes = incomeService.getAllByPaymentDate(
+        YearMonth.of(currentMonthIteration.getYear(), currentMonthIteration.getMonth())
+      );
       for (var income : incomes) {
         log.info("Date: {} | Income: {} | Amount: R${}", income.getPaymentDate(), income.getDescription(), income.getAmount());
       }

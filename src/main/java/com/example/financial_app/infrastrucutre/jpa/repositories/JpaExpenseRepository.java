@@ -1,4 +1,4 @@
-package com.example.financial_app.repositories;
+package com.example.financial_app.infrastrucutre.jpa.repositories;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -9,10 +9,11 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import com.example.financial_app.domain.dao.IExpenseRepository;
 import com.example.financial_app.domain.entities.ExpenseEntity;
 
 @Repository
-public interface IExpenseRepository extends CrudRepository<ExpenseEntity, Long> {
+public interface JpaExpenseRepository extends CrudRepository<ExpenseEntity, Long>, IExpenseRepository {
   @Query("""
     SELECT e FROM ExpenseEntity e 
     WHERE e.paymentType = 'DEBIT' 
