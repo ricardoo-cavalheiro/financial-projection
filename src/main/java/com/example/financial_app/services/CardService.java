@@ -64,9 +64,9 @@ public class CardService implements ICardService {
   public List<CardEntity> getAllCards() {
     log.info("Retrieving all cards");
 
-    var cards = (List<CardEntity>) cardRepository.findAll();
+    var cards = cardRepository.findAll();
 
-    if (!cards.iterator().hasNext()) {
+    if (cards.isEmpty()) {
       log.info("No cards found");
     } else {
       cards.forEach(card -> log.info(card.toString()));

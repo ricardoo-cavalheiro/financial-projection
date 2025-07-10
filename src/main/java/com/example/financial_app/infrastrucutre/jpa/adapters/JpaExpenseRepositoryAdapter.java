@@ -1,7 +1,6 @@
 package com.example.financial_app.infrastrucutre.jpa.adapters;
 
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -95,7 +94,7 @@ public class JpaExpenseRepositoryAdapter implements IExpenseRepository {
             .map(expense -> modelMapper.map(expense, JpaExpenseEntity.class))
             .toList();
 
-        var savedExpenseJpaEntities = Arrays.asList(jpaExpenseRepositoryPort.saveAll(expenseJpaEntities));
+        var savedExpenseJpaEntities = jpaExpenseRepositoryPort.saveAll(expenseJpaEntities);
 
         return savedExpenseJpaEntities
             .stream()

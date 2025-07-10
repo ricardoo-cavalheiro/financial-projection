@@ -341,3 +341,17 @@
 1752071780283:add-onetime-credit-expense --expenseName "Uber" --amount 15.96 --paymentDate 2025-07-09 --cardName "BTG"
 1752071783904:clear
 1752071786724:expenses-projection
+1752156534201:stacktrace
+1752156638215:expenses-projection
+1752157923683:stacktrace
+1752158019856:expenses-projection
+1752166936146:add-onetime-credit-expense --expenseName "Uber" --amount 20.21 --paymentDate 2025-07-10 --cardName "BTG"
+1752167031935:stacktrace
+1752167874629:add-onetime-credit-expense --expenseName "Uber" --amount 20.21 --paymentDate 2025-07-10 --cardName "BTG"
+1752167898508:add-onetime-credit-expense --expenseName "Uber" --amount 1 --paymentDate 2025-07-10 --cardName "BTG"
+1752167906452:add-onetime-credit-expense --expenseName "Uber" --amount 20.9 --paymentDate 2025-07-10 --cardName "BTG"
+1752167922156:add-onetime-credit-expense --expenseName "Exames dentista" --amount 195 --paymentDate 2025-07-10 --cardName "BTG"
+1752167934829:add-onetime-credit-expense --expenseName "Mãe" --amount 20 --paymentDate 2025-07-10 --cardName "BTG"
+1752167958437:expenses-projection
+1752168100018:stacktrace
+1752168101941:expenses-projection

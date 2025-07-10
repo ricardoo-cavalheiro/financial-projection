@@ -6,15 +6,15 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Limit;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
 
 import com.example.financial_app.infrastrucutre.jpa.entities.JpaExpenseEntity;
 
 @Repository
-public interface JpaExpenseRepositoryPort extends CrudRepository<JpaExpenseEntity, Long> {
+public interface JpaExpenseRepositoryPort extends JpaRepository<JpaExpenseEntity, Long> {
   @Query("""
     SELECT e FROM ExpenseEntity e 
     WHERE e.paymentType = 'DEBIT' 
@@ -36,8 +36,6 @@ public interface JpaExpenseRepositoryPort extends CrudRepository<JpaExpenseEntit
       AND e.paymentDate >= :startDate
       AND e.paymentDate <= :endDate""")
   List<JpaExpenseEntity> findAllDebitExpensesByYearMonth(LocalDate startDate, LocalDate endDate);
-
-  @NonNull List<JpaExpenseEntity> findAll();
 
   @NonNull Optional<JpaExpenseEntity> findById(@NonNull Long id);
 }

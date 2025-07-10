@@ -1,7 +1,6 @@
 package com.example.financial_app.infrastrucutre.jpa.adapters;
 
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,7 +56,7 @@ public class JpaIncomeRepositoryAdapter implements IIncomeRepository {
       .map(income -> modelMapper.map(income, JpaIncomeEntity.class))
       .toList();
 
-    var savedIncomeJpaEntities = Arrays.asList(jpaIncomeRepositoryPort.saveAll(incomeJpaEntities));
+    var savedIncomeJpaEntities = jpaIncomeRepositoryPort.saveAll(incomeJpaEntities);
 
     return savedIncomeJpaEntities
       .stream()

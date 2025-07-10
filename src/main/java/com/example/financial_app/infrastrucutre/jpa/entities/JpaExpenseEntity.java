@@ -8,7 +8,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.JdbcType;
 import org.hibernate.dialect.PostgreSQLEnumJdbcType;
 
-import com.example.financial_app.domain.entities.ExpenseEntity;
 import com.example.financial_app.domain.enums.PaymentTypeEnum;
 
 import jakarta.persistence.Column;
@@ -21,10 +20,12 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.Data;
 
+@Data
 @Entity(name = "ExpenseEntity")
 @Table(name = "expense")
-public class JpaExpenseEntity extends ExpenseEntity {
+public class JpaExpenseEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;

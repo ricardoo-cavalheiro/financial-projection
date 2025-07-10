@@ -1,7 +1,6 @@
 package com.example.financial_app.infrastrucutre.jpa.adapters;
 
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -55,7 +54,7 @@ public class JpaInvoiceRepositoryAdapter implements IInvoiceRepository {
     var invoiceJpaEntities = invoices.stream()
         .map(invoice -> modelMapper.map(invoice, JpaInvoiceEntity.class))
         .toList();
-    var savedInvoiceJpaEntities = Arrays.asList(jpaInvoiceRepositoryPort.saveAll(invoiceJpaEntities));
+    var savedInvoiceJpaEntities = jpaInvoiceRepositoryPort.saveAll(invoiceJpaEntities);
 
     return savedInvoiceJpaEntities
         .stream()

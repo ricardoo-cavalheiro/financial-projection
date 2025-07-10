@@ -33,7 +33,7 @@ public class ExpenseService implements IExpenseService {
   private final IInvoiceService invoiceService;
   private final IExpenseRepository expenseRepository;
 
-  @Command(command = "add-recurring-debit-expense", description = "Add a new recurring debit expense.")
+  @Override
   public void addRecurringDebitExpense(
       @Option(required = true) 
       @Size(min = 3, max = 20, message = "Invalid expense name. Name must be between 3 and 20 characters.") 
@@ -67,7 +67,7 @@ public class ExpenseService implements IExpenseService {
     log.info("Recurring debit expense added successfully!");
   }
 
-  @Command(command = "add-onetime-debit-expense", description = "Add a new one-time debit expense.")
+  @Override
   public void addOneTimeDebitExpense(
       @Option(required = true) 
       @Size(min = 3, max = 20, message = "Invalid expense name. Name must be between 3 and 20 characters.") 
@@ -94,7 +94,7 @@ public class ExpenseService implements IExpenseService {
     log.info("One-time debit expense added successfully!");
   }
 
-  @Command(command = "add-recurring-credit-expense", description = "Add a new recurring credit expense.")
+  @Override
   public void addRecurringCreditExpense(
       @Option(required = true) 
       @Size(min = 3, max = 20, message = "Invalid expense name. Name must be between 3 and 20 characters.") 
@@ -158,7 +158,7 @@ public class ExpenseService implements IExpenseService {
     log.info("Expense added successfully!");
   }
 
-  @Command(command = "add-onetime-credit-expense", description = "Add a new one-time credit expense.")
+  @Override
   public void addOneTimeCreditExpense(
       @Option(required = true) 
       @Size(min = 3, max = 20, message = "Invalid expense name. Name must be between 3 and 20 characters.") 
@@ -201,6 +201,7 @@ public class ExpenseService implements IExpenseService {
     log.info("One-time credit expense added successfully!");
   }
 
+  @Override
   public List<ExpenseEntity> getDebitExpenses(Integer months) {
     log.info("Retrieving all debit expenses for the next {} months.", months);
 
@@ -231,6 +232,7 @@ public class ExpenseService implements IExpenseService {
     return expenses;
   }
 
+  @Override
   public List<ExpenseEntity> getAllDebitExpensesByDate(LocalDate currentMonthIteration) {
     log.info("Retrieving all debit expenses by date.");
 
@@ -252,6 +254,7 @@ public class ExpenseService implements IExpenseService {
     return debitExpenses;
   }
 
+  @Override
   public BigDecimal sumDebitExpenses(List<ExpenseEntity> debitExpenses) {
     log.info("Summing all debit expenses.");
 

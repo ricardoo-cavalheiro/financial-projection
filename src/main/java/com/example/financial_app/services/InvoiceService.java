@@ -2,6 +2,7 @@ package com.example.financial_app.services;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,9 +12,7 @@ import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.command.annotation.Option;
 
 import com.example.financial_app.domain.dao.IInvoiceRepository;
-import com.example.financial_app.domain.entities.ExpenseEntity;
 import com.example.financial_app.domain.entities.InvoiceEntity;
-import com.example.financial_app.domain.enums.PaymentTypeEnum;
 import com.example.financial_app.domain.services.ICardService;
 import com.example.financial_app.domain.services.IInvoiceService;
 
@@ -36,21 +35,10 @@ public class InvoiceService implements IInvoiceService {
     log.info("Creating {} invoices", months);
 
     var card = cardService.getCard(cardName);
-    var currentDate = LocalDate.now();
 
     var invoices = new ArrayList<InvoiceEntity>();
-    for (int i = 0; i < months; i++) {
-      var closingDate = currentDate.withDayOfMonth(card.getClosingDay()).plusMonths(i);
-      var paymentDate = currentDate.withDayOfMonth(card.getPaymentDay()).plusMonths(i);
-
-      var invoice = InvoiceEntity.builder()
-          .card(card)
-          .amount(BigDecimal.ZERO)
-          .isPaid(currentDate.isAfter(closingDate))
-          .closingDate(closingDate)
-          .paymentDate(paymentDate)
-          .wasManuallyAdded(Boolean.FALSE)
-          .build();
+    for (int i = 1; i <= months; i++) {
+      var invoice = InvoiceEntity.create(card, Month.of(i));
 
       invoices.add(invoice);
       log.info("Invoice created with closing date: {}", invoice.getClosingDate());
@@ -71,7 +59,7 @@ public class InvoiceService implements IInvoiceService {
     var invoice = invoiceRepository.findByClosingDateAndCardName(closingDate, card.getName())
         .orElseThrow(() -> new IllegalArgumentException("Invoice not found with closing date: " + closingDate));
 
-    invoice.setIsPaid(isPaid);
+    invoice.setAsPaid(isPaid);
     invoiceRepository.save(invoice);
 
     log.info("Invoice with closing date {} updated successfully. Is Paid: {}", closingDate, isPaid);
@@ -105,8 +93,7 @@ public class InvoiceService implements IInvoiceService {
     var invoice = invoiceRepository.findById(Long.parseLong(id))
         .orElseThrow(() -> new IllegalArgumentException("Invoice not found with ID: " + id));
 
-    invoice.setAmount(amount);
-    invoice.setWasManuallyAdded(Boolean.TRUE);
+    invoice.replaceInvoiceAmountById(amount);
     invoiceRepository.save(invoice);
 
     log.info("Invoice amount updated successfully for ID: {}", id);
@@ -124,17 +111,7 @@ public class InvoiceService implements IInvoiceService {
   public BigDecimal sumInvoiceExpenses(InvoiceEntity invoice) {
     log.info("Summing expenses for card '{}'", invoice.getCard().getName());
 
-    if (invoice.getWasManuallyAdded()) {
-      log.info("Invoice was manually altered");
-      return invoice.getAmount();
-    }
-
-    var totalAmount = invoice.getExpenses().stream()
-        .filter(expense -> !expense.getIsIgnored())
-        .filter(expense -> expense.getPaymentType().equals(PaymentTypeEnum.CREDIT))
-        .map(ExpenseEntity::getAmount)
-        .reduce(BigDecimal.ZERO, BigDecimal::add);
-
+    var totalAmount = invoice.sumExpenses();
     invoice.setAmount(totalAmount);
     invoiceRepository.save(invoice);
 

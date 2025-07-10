@@ -3,7 +3,11 @@ package com.example.financial_app.domain.entities;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.List;
+import java.util.Objects;
+
+import com.example.financial_app.domain.enums.PaymentTypeEnum;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,4 +30,50 @@ public class InvoiceEntity {
   private LocalDateTime createdAt;
   private CardEntity card;
   private List<ExpenseEntity> expenses;
+
+  public static InvoiceEntity create(CardEntity card, Month month) {
+    Objects.requireNonNull(card, "Card cannot be null");
+    Objects.requireNonNull(month, "Month cannot be null");
+
+    var currentDate = LocalDate.now();
+    var closingDate = currentDate.withDayOfMonth(card.getClosingDay()).plusMonths(month.getValue());
+    var paymentDate = currentDate.withDayOfMonth(card.getPaymentDay()).plusMonths(month.getValue());
+
+    return InvoiceEntity.builder()
+        .card(card)
+        .amount(BigDecimal.ZERO)
+        .closingDate(closingDate)
+        .paymentDate(paymentDate)
+        .wasManuallyAdded(Boolean.FALSE)
+        .isPaid(LocalDate.now().isAfter(closingDate))
+        .createdAt(LocalDateTime.now())
+        .build();
+  }
+
+  public BigDecimal sumExpenses() {
+    if (expenses == null || expenses.isEmpty()) {
+      return BigDecimal.ZERO;
+    }
+
+    if (wasManuallyAdded) {
+      return getAmount();
+    }
+
+    return expenses.stream()
+        .filter(expense -> !expense.getIsIgnored())
+        .filter(expense -> expense.getPaymentType().equals(PaymentTypeEnum.CREDIT))
+        .map(ExpenseEntity::getAmount)
+        .reduce(BigDecimal.ZERO, BigDecimal::add);
+  }
+
+  public void replaceInvoiceAmountById(BigDecimal newAmount) {
+    setAmount(newAmount);
+    setWasManuallyAdded(Boolean.TRUE);
+  }
+
+  public void setAsPaid(Boolean isPaid) {
+    Objects.requireNonNull(isPaid, "isPaid cannot be null");
+
+    setIsPaid(isPaid);
+  }
 }

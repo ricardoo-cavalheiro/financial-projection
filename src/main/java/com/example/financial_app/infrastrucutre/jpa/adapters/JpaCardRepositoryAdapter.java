@@ -33,7 +33,7 @@ public class JpaCardRepositoryAdapter implements ICardRepository {
 
     return cardJpaEntities
       .stream()
-      .map(entity -> modelMapper.map(jpaCardRepositoryPort, CardEntity.class))
+      .map(entity -> modelMapper.map(entity, CardEntity.class))
       .toList();
   }
 
