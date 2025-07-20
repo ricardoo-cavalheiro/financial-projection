@@ -8,8 +8,7 @@ import java.util.List;
 
 import org.springframework.data.domain.Limit;
 import org.springframework.data.domain.Sort;
-import org.springframework.shell.command.annotation.Command;
-import org.springframework.shell.command.annotation.Option;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.financial_app.domain.dao.IExpenseRepository;
@@ -18,15 +17,12 @@ import com.example.financial_app.domain.enums.PaymentTypeEnum;
 import com.example.financial_app.domain.services.IExpenseService;
 import com.example.financial_app.domain.services.IInvoiceService;
 
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Transactional
-@Command(group = "Expense", description = "Commands related to expense management.")
+@Service
 @RequiredArgsConstructor
 public class ExpenseService implements IExpenseService {
   private final CardService cardService;
@@ -35,11 +31,9 @@ public class ExpenseService implements IExpenseService {
 
   @Override
   public void addRecurringDebitExpense(
-      @Option(required = true) 
-      @Size(min = 3, max = 20, message = "Invalid expense name. Name must be between 3 and 20 characters.") 
       String expenseName,
-      @Option(required = true) @Min(0) BigDecimal amount,
-      @Option(required = true) @Min(1) @Max(31) Integer paymentDay
+      BigDecimal amount,
+      Integer paymentDay
   ) {
     log.info("Adding debit expense with name: {}, amount: {}, payment day: {}", expenseName, amount, paymentDay);
 
@@ -69,11 +63,9 @@ public class ExpenseService implements IExpenseService {
 
   @Override
   public void addOneTimeDebitExpense(
-      @Option(required = true) 
-      @Size(min = 3, max = 20, message = "Invalid expense name. Name must be between 3 and 20 characters.") 
       String expenseName,
-      @Option(required = true) @Min(0) BigDecimal amount,
-      @Option(required = true) LocalDate paymentDate
+      BigDecimal amount,
+      LocalDate paymentDate
   ) {
     log.info("Adding one-time debit expense with name: {}, amount: {}, payment date: {}", expenseName, amount, paymentDate);
 
@@ -96,16 +88,12 @@ public class ExpenseService implements IExpenseService {
 
   @Override
   public void addRecurringCreditExpense(
-      @Option(required = true) 
-      @Size(min = 3, max = 20, message = "Invalid expense name. Name must be between 3 and 20 characters.") 
       String expenseName,
-      @Option(required = true) @Min(0) BigDecimal amount,
-      @Option(required = true) @Min(1) @Max(31) Integer paymentDay,
-      @Option(required = false) 
-      @Size(min = 3, max = 20, message = "Invalid card name. Name must be between 3 and 20 characters.") 
+      BigDecimal amount,
+      Integer paymentDay, 
       String cardName,
-      @Option(required = false) @Min(1) Integer totalInstallments,
-      @Option(required = false) @Min(1) Integer installmentNumber) {
+      Integer totalInstallments,
+      Integer installmentNumber) {
     log.info(
         "Adding expense for the next 12 months with name: {}, amount: {}, payment day: {}",
         expenseName, amount, paymentDay);
@@ -160,13 +148,9 @@ public class ExpenseService implements IExpenseService {
 
   @Override
   public void addOneTimeCreditExpense(
-      @Option(required = true) 
-      @Size(min = 3, max = 20, message = "Invalid expense name. Name must be between 3 and 20 characters.") 
       String expenseName,
-      @Option(required = true) @Min(0) BigDecimal amount,
-      @Option(required = true) LocalDate paymentDate,
-      @Option(required = false) 
-      @Size(min = 3, max = 20, message = "Invalid card name. Name must be between 3 and 20 characters.") 
+      BigDecimal amount,
+      LocalDate paymentDate,
       String cardName) {
     log.info("Adding one-time credit expense with name: {}, amount: {}, payment date: {}", expenseName, amount, paymentDate);
 

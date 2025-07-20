@@ -20,7 +20,7 @@ public interface IInvoiceService {
 
   public List<InvoiceEntity> getInvoices(String cardName, Integer months);
 
-  public void replaceInvoiceAmountById(String id, BigDecimal amount);
+  public void updateInvoiceAmountById(String id, BigDecimal amount);
 
   public InvoiceEntity getInvoiceByClosingDateAndCardName(LocalDate closingDate, String cardName);
 

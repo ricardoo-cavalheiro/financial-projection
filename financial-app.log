@@ -355,3 +355,58 @@
 1752167958437:expenses-projection
 1752168100018:stacktrace
 1752168101941:expenses-projection
+1752195406112:add-onetime-credit-expense --expenseName "Atacadão" --amount 56.86 --paymentDate 2025-07-10 --cardName "BTG"
+1752282170727:add-onetime-credit-expense --expenseName "Maby" --amount 34.48 --paymentDate 2025-07-11 --cardName "BTG"
+1752282173317:clear
+1752282175162:expenses-projection
+1752282337730:clear
+1752282339075:expenses-projection
+1752495995019:add-onetime-credit-expense --expenseName "IFood" --amount 25.73 --paymentDate 2025-07-14 --cardName "BTG"
+1752496004899:add-onetime-credit-expense --expenseName "IFood" --amount 37.89 --paymentDate 2025-07-14 --cardName "BTG"
+1752496014508:clear
+1752496016319:expenses-projection
+1752496108873:add-onetime-credit-expense --expenseName "Linha de C´redito" --amount 122.12 --paymentDate 2025-07-16 --cardName "Mercado Pago"
+1752496110175:expenses-projection
+1752537241460:add-onetime-credit-expense --expenseName "Maby" --amount 24.42 --paymentDate 2025-07-14 --cardName "BTG"
+1752537266600:add-onetime-credit-expense --expenseName "Milk Shake (Shopping)" --amount 16.5 --paymentDate 2025-07-14 --cardName "BTG"
+1752537276697:add-onetime-credit-expense --expenseName "Milk Shake" --amount 16.5 --paymentDate 2025-07-14 --cardName "BTG"
+1752537278161:clear
+1752604910049:expenses-projection
+1752604964025:clear
+1752605025532:add-recurring-credit-expense --expenseName "Spotify" --amount 27.9  --paymentDay 10 --cardName "BTG" --totalInstallments 12 --installmentNumber 1
+1752605256337:create-invoices --months 12 --cardName "BTG"
+1752605259123:add-recurring-credit-expense --expenseName "Spotify" --amount 27.9  --paymentDay 10 --cardName "BTG" --totalInstallments 12 --installmentNumber 1
+1752605632606:add-recurring-credit-expense --expenseName "YoutTube Premium" --amount 16.9  --paymentDay 18 --cardName "BTG" --totalInstallments 12 --installmentNumber 1
+1752605649342:add-recurring-credit-expense --expenseName "Cestto" --amount 800 --paymentDay 5 --cardName "BTG" --totalInstallments 12 --installmentNumber 1
+1752605665039:add-recurring-credit-expense --expenseName "Wi-Fi" --amount 180 --paymentDay 20 --cardName "BTG" --totalInstallments 12 --installmentNumber 1
+1752605681335:add-recurring-credit-expense --expenseName "Faculdade" --amount 256.9 --paymentDay 10 --cardName "BTG" --totalInstallments 12 --installmentNumber 1
+1752605687226:clear
+1752605689997:expenses-projection
+1752612523428:add-onetime-credit-expense --expenseName "Maby" --amount 16.58 --paymentDate 2025-07-15 --cardName "BTG"
+1752612525781:clear
+1752612524815:expenses-projection
+1752625348009:add-onetime-credit-expense --expenseName "Cuecas" --amount 179.9 --paymentDate 2025-07-15 --cardName "BTG"
+1752763820919:clear
+1752763822458:expenses-projection
+1752763856875:clear
+1753037872723:add-onetime-credit-expense --expenseName "Shopee (Rato)" --amount 157.45 --paymentDate 2025-07-18 --cardName "BTG"
+1753037891546:add-onetime-credit-expense --expenseName "Shopee (Moletom)" --amount 153.32 --paymentDate 2025-07-18 --cardName "BTG"
+1753037894109:clear
+1753037896134:expenses-projection
+1753037900660:lear
+1753037901808:clear
+1753037903191:expenses-projection
+1753038008608:clear
+1753038049390:add-onetime-credit-expense --expenseName "Desnecessario" --amount 88.25 --paymentDate 2025-07-19 --cardName "Mercado Pago"
+1753038051605:clear
+1753039561875:update-invoice-amount --invoiceId 14 --amount 1439.89
+1753039575177:clear
+1753039578267:expenses-projection
+1753039696183:clear
+1753039697812:expenses-projection
+1753039780738:add-onetime-credit-expense --expenseName "Desnecessario" --amount 88.25 --paymentDate 2025-07-19 --cardName "Mercado Pago"
+1753039879668:set-invoice-paid --cardName "Mercado Pago" --closingDate 2025-07-15 --isPaid true
+1753039903659:add-onetime-credit-expense --expenseName "Desnecessario" --amount 88.25 --paymentDate 2025-07-19 --cardName "Mercado Pago"
+1753039940427:clear
+1753039949674:add-onetime-credit-expense --expenseName "Desnecessario" --amount 88.25 --paymentDate 2025-07-19 --cardName "Mercado Pago"
+1753039968047:expenses-projection

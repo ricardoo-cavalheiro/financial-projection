@@ -8,8 +8,7 @@ import java.util.List;
 
 import org.springframework.data.domain.Limit;
 import org.springframework.data.domain.Sort;
-import org.springframework.shell.command.annotation.Command;
-import org.springframework.shell.command.annotation.Option;
+import org.springframework.stereotype.Service;
 
 import com.example.financial_app.domain.dao.IInvoiceRepository;
 import com.example.financial_app.domain.entities.InvoiceEntity;
@@ -22,16 +21,16 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Transactional
-@Command(group = "Invoice", description = "Commands related to invoice management.")
+@Service
 @RequiredArgsConstructor
 public class InvoiceService implements IInvoiceService {
   private final IInvoiceRepository invoiceRepository;
   private final ICardService cardService;
 
-  @Command(command = "create-invoices", description = "Create a new invoice.")
   public void createInvoice(
-      @Option(required = true) Integer months,
-      @Option(required = true) String cardName) {
+    Integer months,
+    String cardName
+  ) {
     log.info("Creating {} invoices", months);
 
     var card = cardService.getCard(cardName);
@@ -47,11 +46,11 @@ public class InvoiceService implements IInvoiceService {
     invoiceRepository.saveAll(invoices);
   }
 
-  @Command(command = "set-invoice-paid", description = "Set an invoice as paid.")
   public void setInvoicePaid(
-      @Option(required = true) String cardName,
-      @Option(required = true) LocalDate closingDate,
-      @Option(required = true) Boolean isPaid) {
+    String cardName,
+    LocalDate closingDate,
+    Boolean isPaid
+  ) {
     log.info("Setting invoice closing date {} as paid: {}", closingDate, isPaid);
 
     var card = cardService.getCard(cardName);
@@ -87,13 +86,13 @@ public class InvoiceService implements IInvoiceService {
     return invoices;
   }
 
-  public void replaceInvoiceAmountById(String id, BigDecimal amount) {
+  public void updateInvoiceAmountById(String id, BigDecimal amount) {
     log.info("Replacing invoice amount for ID: {}", id);
 
     var invoice = invoiceRepository.findById(Long.parseLong(id))
         .orElseThrow(() -> new IllegalArgumentException("Invoice not found with ID: " + id));
 
-    invoice.replaceInvoiceAmountById(amount);
+    invoice.updateAmount(amount);
     invoiceRepository.save(invoice);
 
     log.info("Invoice amount updated successfully for ID: {}", id);
@@ -102,8 +101,8 @@ public class InvoiceService implements IInvoiceService {
   public InvoiceEntity getInvoiceByClosingDateAndCardName(LocalDate closingDate, String cardName) {
     log.info("Retrieving invoice for closing date '{}'", closingDate);
 
-    var invoice = invoiceRepository.findByClosingDateAndCardName(closingDate, cardName).orElseThrow(
-        () -> new IllegalArgumentException("Invoice not found with closing date: " + closingDate));
+    var invoice = invoiceRepository.findByClosingDateAndCardName(closingDate, cardName)
+      .orElseThrow(() -> new IllegalArgumentException("Invoice not found with closing date: " + closingDate));
 
     return invoice;
   }

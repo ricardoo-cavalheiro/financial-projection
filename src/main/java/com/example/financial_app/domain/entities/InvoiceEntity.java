@@ -35,28 +35,28 @@ public class InvoiceEntity {
     Objects.requireNonNull(card, "Card cannot be null");
     Objects.requireNonNull(month, "Month cannot be null");
 
-    var currentDate = LocalDate.now();
+    var currentDate = LocalDateTime.now();
     var closingDate = currentDate.withDayOfMonth(card.getClosingDay()).plusMonths(month.getValue());
     var paymentDate = currentDate.withDayOfMonth(card.getPaymentDay()).plusMonths(month.getValue());
 
     return InvoiceEntity.builder()
         .card(card)
         .amount(BigDecimal.ZERO)
-        .closingDate(closingDate)
-        .paymentDate(paymentDate)
+        .closingDate(closingDate.toLocalDate())
+        .paymentDate(paymentDate.toLocalDate())
         .wasManuallyAdded(Boolean.FALSE)
-        .isPaid(LocalDate.now().isAfter(closingDate))
-        .createdAt(LocalDateTime.now())
+        .isPaid(currentDate.isAfter(closingDate))
+        .createdAt(currentDate)
         .build();
   }
 
   public BigDecimal sumExpenses() {
-    if (expenses == null || expenses.isEmpty()) {
-      return BigDecimal.ZERO;
-    }
-
     if (wasManuallyAdded) {
       return getAmount();
+    }
+
+    if (expenses == null || expenses.isEmpty()) {
+      return BigDecimal.ZERO;
     }
 
     return expenses.stream()
@@ -66,13 +66,15 @@ public class InvoiceEntity {
         .reduce(BigDecimal.ZERO, BigDecimal::add);
   }
 
-  public void replaceInvoiceAmountById(BigDecimal newAmount) {
+  public void updateAmount(BigDecimal newAmount) {
+    Objects.requireNonNull(newAmount, "'newAmount' cannot be null");
+
     setAmount(newAmount);
     setWasManuallyAdded(Boolean.TRUE);
   }
 
   public void setAsPaid(Boolean isPaid) {
-    Objects.requireNonNull(isPaid, "isPaid cannot be null");
+    Objects.requireNonNull(isPaid, "'isPaid' cannot be null");
 
     setIsPaid(isPaid);
   }
