@@ -14,7 +14,7 @@ import lombok.Data;
 
 @Data
 @Entity(name = "CardEntity")
-@Table(name = "card")
+@Table(name = "card", schema = "DEV")
 public class JpaCardEntity {
   @Id
   @GeneratedValue(strategy=GenerationType.IDENTITY)

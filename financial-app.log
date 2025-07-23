@@ -410,3 +410,23 @@
 1753039940427:clear
 1753039949674:add-onetime-credit-expense --expenseName "Desnecessario" --amount 88.25 --paymentDate 2025-07-19 --cardName "Mercado Pago"
 1753039968047:expenses-projection
+1753190161135:clear
+1753190181050:add-onetime-credit-expense --expenseName "Desnecessario" --amount 60 --paymentDate 2025-07-22 --cardName "Mercado Pago"
+1753190183511:clear
+1753190185088:expenses-projection
+1753200194404:create-invoices help
+1753200197801:create-invoices --help
+1753200204435:create-invoices --months 12
+1753200211942:create-invoices --months 12 --cardName "Mercado Pago"
+1753200289920:stacktrace
+1753200378966:get-all-cards
+1753204165035:stacktrace
+1753204588710:get-all-cards
+1753205694494:OO
+1753205694643:O
+1753205714293:get-all-cards
+1753207740178:stacktrace
+1753207866837:get-all-cards
+1753207896989:create-invoices --months 12 --cardName "Nubank"
+1753232597892:add-onetime-debit-expense --expenseName "Maby" --amount 23.54 --paymentDate 2025-07-22
+1753232621317:add-onetime-debit-expense --expenseName "Maby" --amount 23.54 --paymentDate 2025-07-23

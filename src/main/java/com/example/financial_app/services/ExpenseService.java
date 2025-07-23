@@ -37,21 +37,19 @@ public class ExpenseService implements IExpenseService {
   ) {
     log.info("Adding debit expense with name: {}, amount: {}, payment day: {}", expenseName, amount, paymentDay);
 
-    var currentDate = LocalDate.now();
-
     var expenses = new ArrayList<ExpenseEntity>();
-    for (int i = 0; i < 12; i++) {
-      var currentIterationMonth = currentDate.withDayOfMonth(paymentDay).plusMonths(i);
+    for (int monthOffset = 0; monthOffset < 12; monthOffset++) {
+      var currentIterationPaymentDate = LocalDate.now()
+        .plusMonths(monthOffset)
+        .withDayOfMonth(paymentDay);
 
-      var expense = ExpenseEntity.builder()
-          .description(expenseName)
-          .amount(amount)
-          .paymentType(PaymentTypeEnum.DEBIT)
-          .isRecurring(Boolean.TRUE)
-          .isIgnored(Boolean.FALSE)
-          .isPaid(currentIterationMonth.isBefore(currentDate) || currentIterationMonth.isEqual(currentDate))
-          .paymentDate(currentIterationMonth)
-          .build();
+      var expense = ExpenseEntity.create(
+        expenseName, 
+        amount, 
+        currentIterationPaymentDate, 
+        PaymentTypeEnum.DEBIT, 
+        Boolean.TRUE
+      );
 
       expenses.add(expense);
     }
@@ -69,17 +67,13 @@ public class ExpenseService implements IExpenseService {
   ) {
     log.info("Adding one-time debit expense with name: {}, amount: {}, payment date: {}", expenseName, amount, paymentDate);
 
-    var currentDate = LocalDate.now();
-
-    var expense = ExpenseEntity.builder()
-        .description(expenseName)
-        .amount(amount)
-        .paymentType(PaymentTypeEnum.DEBIT)
-        .isRecurring(Boolean.FALSE)
-        .isIgnored(Boolean.FALSE)
-        .isPaid(paymentDate.isBefore(currentDate) || paymentDate.isEqual(currentDate))
-        .paymentDate(paymentDate)
-        .build();
+    var expense = ExpenseEntity.create(
+      expenseName, 
+      amount, 
+      paymentDate,
+      PaymentTypeEnum.DEBIT, 
+      Boolean.FALSE
+    );
 
     expenseRepository.save(expense);
 

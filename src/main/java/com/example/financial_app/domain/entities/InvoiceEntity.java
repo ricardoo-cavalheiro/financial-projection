@@ -3,7 +3,6 @@ package com.example.financial_app.domain.entities;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Month;
 import java.util.List;
 import java.util.Objects;
 
@@ -31,22 +30,29 @@ public class InvoiceEntity {
   private CardEntity card;
   private List<ExpenseEntity> expenses;
 
-  public static InvoiceEntity create(CardEntity card, Month month) {
-    Objects.requireNonNull(card, "Card cannot be null");
-    Objects.requireNonNull(month, "Month cannot be null");
+  public static InvoiceEntity create(CardEntity card, Integer month) {
+    Objects.requireNonNull(card, "'card' cannot be null");
+    Objects.requireNonNull(month, "'month' cannot be null");
 
-    var currentDate = LocalDateTime.now();
-    var closingDate = currentDate.withDayOfMonth(card.getClosingDay()).plusMonths(month.getValue());
-    var paymentDate = currentDate.withDayOfMonth(card.getPaymentDay()).plusMonths(month.getValue());
+    var currentDateTime = LocalDateTime.now().plusMonths(month);
+    var currentDate = currentDateTime.toLocalDate();
+    var maxDayInMonth = currentDate.lengthOfMonth();
+
+    var safeClosingDay = Math.min(card.getClosingDay(), maxDayInMonth);
+    var safePaymentDay = Math.min(card.getPaymentDay(), maxDayInMonth);
+    var closingDate = currentDate.withDayOfMonth(safeClosingDay);
+    var paymentDate = currentDate.withDayOfMonth(safePaymentDay);
+
+    var isPaid = isInvoicePaid(currentDate, closingDate, month);
 
     return InvoiceEntity.builder()
         .card(card)
         .amount(BigDecimal.ZERO)
-        .closingDate(closingDate.toLocalDate())
-        .paymentDate(paymentDate.toLocalDate())
+        .closingDate(closingDate)
+        .paymentDate(paymentDate)
         .wasManuallyAdded(Boolean.FALSE)
-        .isPaid(currentDate.isAfter(closingDate))
-        .createdAt(currentDate)
+        .isPaid(isPaid)
+        .createdAt(currentDateTime)
         .build();
   }
 
@@ -77,5 +83,13 @@ public class InvoiceEntity {
     Objects.requireNonNull(isPaid, "'isPaid' cannot be null");
 
     setIsPaid(isPaid);
+  }
+
+  private static Boolean isInvoicePaid(LocalDate currentDate, LocalDate closingDate, Integer month) {
+    if (month < 1 && closingDate.isBefore(currentDate)) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }
