@@ -430,3 +430,4 @@
 1753207896989:create-invoices --months 12 --cardName "Nubank"
 1753232597892:add-onetime-debit-expense --expenseName "Maby" --amount 23.54 --paymentDate 2025-07-22
 1753232621317:add-onetime-debit-expense --expenseName "Maby" --amount 23.54 --paymentDate 2025-07-23
+1753285270624:get-all-cards
