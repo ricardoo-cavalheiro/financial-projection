@@ -410,3 +410,7 @@
 1753039940427:clear
 1753039949674:add-onetime-credit-expense --expenseName "Desnecessario" --amount 88.25 --paymentDate 2025-07-19 --cardName "Mercado Pago"
 1753039968047:expenses-projection
+1753306832077:add-onetime-credit-expense --expenseName "Roupa Tayler" --amount 29.9 --paymentDate 2025-07-22 --cardName "BTG"
+1753306834079:expenses-projection
+1753306872849:add-onetime-credit-expense --expenseName "Maby" --amount 45.62 --paymentDate 2025-07-23 --cardName "BTG"
+1753306874721:expenses-projection
