@@ -6,32 +6,24 @@ import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.shell.command.annotation.Command;
-import org.springframework.shell.command.annotation.Option;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.financial_app.domain.dao.IIncomeRepository;
 import com.example.financial_app.domain.entities.IncomeEntity;
 import com.example.financial_app.domain.services.IIncomeService;
 
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Transactional
-@Command(group = "Income", description = "Commands related to income management")
+@Service
 @RequiredArgsConstructor
 public class IncomeService implements IIncomeService {
   private final IIncomeRepository incomeRepository;
 
-  @Command(command = "add-recurring-income", description = "Add a new recurring income")
-  public void addRecurringIncome(
-    @Option(required = true) @Size(min=3, max=20, message = "Invalid income name. Name must be between 3 and 20 characters.") String incomeName,
-    @Option(required = true) @Min(0) BigDecimal amount,
-    @Option(required = true) @Min(1) Integer recurrenceDay
-  ) {
+  public void addRecurringIncome(String incomeName, BigDecimal amount, Integer recurrenceDay) {
     log.info(
       "Adding recurring income with name: {}, amount: {}, recurrence day: {}", 
       incomeName, amount, recurrenceDay
@@ -60,14 +52,7 @@ public class IncomeService implements IIncomeService {
     log.info("Income added successfully!");
   }
 
-  @Command(command = "add-one-time-income", description = "Add a new one-time income")
-  public void addOneTimeIncome(
-    @Option(required = true) 
-    @Size(min=3, max=20, message = "Invalid income name. Name must be between 3 and 20 characters.") 
-    String incomeName,
-    @Option(required = true) @Min(0) BigDecimal amount,
-    @Option(required = true) LocalDate paymentDate
-  ) {
+  public void addOneTimeIncome(String incomeName, BigDecimal amount, LocalDate paymentDate) {
     log.info(
       "Adding one time income with name: {}, amount: {}, payment date: {}", 
       incomeName, amount, paymentDate
@@ -89,7 +74,9 @@ public class IncomeService implements IIncomeService {
   public BigDecimal sumMonthlyIncome(YearMonth referenceDate) {
     log.info("Calculating total income for month: {}", referenceDate);
     
-    var totalIncome = getAllByPaymentDate(referenceDate).stream()
+    var incomes = getAllByPaymentDate(referenceDate);
+    
+    var totalIncome = incomes.stream()
       .map(IncomeEntity::getAmount)
       .reduce(BigDecimal.ZERO, BigDecimal::add);
 
@@ -102,9 +89,8 @@ public class IncomeService implements IIncomeService {
     return incomeRepository.findAllByPaymentDateBetween(referenceDate.atDay(1), referenceDate.atEndOfMonth());
   }
 
-  @Command(command = "get-all-incomes", description = "Retrieve all incomes")
   public List<IncomeEntity> getAllIncomes() {
     log.info("Retrieving all incomes");
-    return (List<IncomeEntity>) incomeRepository.findAll();
+    return incomeRepository.findAll();
   }
 }

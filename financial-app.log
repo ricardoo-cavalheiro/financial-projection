@@ -414,3 +414,12 @@
 1753306834079:expenses-projection
 1753306872849:add-onetime-credit-expense --expenseName "Maby" --amount 45.62 --paymentDate 2025-07-23 --cardName "BTG"
 1753306874721:expenses-projection
+1753406028963:add-onetime-credit-expense --expenseName "Cacau Show" --amount 25.95 --paymentDate 2025-07-24 --cardName "BTG"
+1753406100962:add-onetime-credit-expense --expenseName "Desconhecido" --amount 31.95 --paymentDate 2025-07-22 --cardName "Mercado Pago"
+1753620355676:add-onetime-credit-expense --expenseName "Uber" --amount 6.95 --paymentDate 2025-07-24 --cardName "BTG"
+1753620376626:add-onetime-credit-expense --expenseName "Uber" --amount 10.97 --paymentDate 2025-07-25 --cardName "BTG"
+1753620395217:add-onetime-credit-expense --expenseName "Pizzaria" --amount 63 --paymentDate 2025-07-25 --cardName "BTG"
+1753620413595:add-onetime-credit-expense --expenseName "Farmacia" --amount 18.14 --paymentDate 2025-07-26 --cardName "BTG"
+1753620422458:clear
+1753620491488:add-one-time-income --incomeName "reembolso shopee" --amount 157.45 --paymentDate 2025-07-25
+1753620783838:expenses-projection
