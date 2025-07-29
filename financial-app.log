@@ -423,3 +423,9 @@
 1753620422458:clear
 1753620491488:add-one-time-income --incomeName "reembolso shopee" --amount 157.45 --paymentDate 2025-07-25
 1753620783838:expenses-projection
+1753792492506:add-onetime-credit-expense --expenseName "Uber" --amount 26.96 --paymentDate 2025-07-27 --cardName "BTG"
+1753792523927:stacktrace
+1753792558729:add-onetime-credit-expense --expenseName "Uber" --amount 26.96 --paymentDate 2025-07-27 --cardName "BTG"
+1753793339219:add-onetime-credit-expense --expenseName "Uber" --amount 35.91 --paymentDate 2025-07-27 --cardName "BTG"
+1753793340867:clear
+1753793343530:expenses-projection

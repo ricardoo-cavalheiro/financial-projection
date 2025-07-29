@@ -20,7 +20,7 @@ import lombok.Data;
 
 @Data
 @Entity(name = "InvoiceEntity")
-@Table(name = "invoice")
+@Table(name = "invoice", schema = "prd")
 public class JpaInvoiceEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
