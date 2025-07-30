@@ -16,7 +16,7 @@ import lombok.Data;
 
 @Data
 @Entity(name = "IncomeEntity")
-@Table(name = "income")
+@Table(name = "income", schema = "prd")
 public class JpaIncomeEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
