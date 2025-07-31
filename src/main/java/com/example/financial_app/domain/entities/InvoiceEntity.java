@@ -1,6 +1,7 @@
 package com.example.financial_app.domain.entities;
 
 import java.math.BigDecimal;
+import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -30,11 +31,11 @@ public class InvoiceEntity {
   private CardEntity card;
   private List<ExpenseEntity> expenses;
 
-  public static InvoiceEntity create(CardEntity card, Integer month) {
+  public static InvoiceEntity create(CardEntity card, Integer month, Clock clock) {
     Objects.requireNonNull(card, "'card' cannot be null");
     Objects.requireNonNull(month, "'month' cannot be null");
 
-    var currentDateTime = LocalDateTime.now().plusMonths(month);
+    var currentDateTime = LocalDateTime.now(clock).plusMonths(month);
     var currentDate = currentDateTime.toLocalDate();
     var maxDayInMonth = currentDate.lengthOfMonth();
 

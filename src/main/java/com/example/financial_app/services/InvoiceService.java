@@ -1,6 +1,7 @@
 package com.example.financial_app.services;
 
 import java.math.BigDecimal;
+import java.time.Clock;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 public class InvoiceService implements IInvoiceService {
   private final IInvoiceRepository invoiceRepository;
   private final ICardService cardService;
+  private final Clock clock;
 
   public void createInvoice(
     Integer months,
@@ -36,7 +38,7 @@ public class InvoiceService implements IInvoiceService {
 
     var invoices = new ArrayList<InvoiceEntity>();
     for (int monthOffset = 0; monthOffset <= months; monthOffset++)
-      invoices.add(InvoiceEntity.create(card, monthOffset));
+      invoices.add(InvoiceEntity.create(card, monthOffset, clock));
 
     invoiceRepository.saveAll(invoices);
   }
