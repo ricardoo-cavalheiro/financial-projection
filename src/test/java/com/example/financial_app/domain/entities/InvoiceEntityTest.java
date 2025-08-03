@@ -4,10 +4,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNullPointerException;
 
 import java.math.BigDecimal;
 import java.time.Clock;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 
 public class InvoiceEntityTest {
   private final static Integer CLOSING_DAY = 15;
@@ -21,9 +23,9 @@ public class InvoiceEntityTest {
     var currentDate = CURRENT_DATE_TIME.toLocalDate();
 
     var card = createCard();
-    var month = 0; // Current month
+    var month = YearMonth.now(clock); // Current month
 
-    var invoice = InvoiceEntity.create(card, month, clock);
+    var invoice = createInvoiceEntity(card, month, clock);
 
     assertThat(invoice.getCard())
       .as("Invoice was set to card '%s'", invoice.getCard().getName())
@@ -35,6 +37,76 @@ public class InvoiceEntityTest {
     assertThat(invoice.getCreatedAt()).isEqualTo(CURRENT_DATE_TIME);
   }
 
+  @Test
+  @DisplayName("Should create unpaid invoice when current date is before closing date")
+  void testCreateUnpaidInvoiceBeforeClosingDate() {
+    var clock = createClock();
+    var month = YearMonth.now(clock); // Current month
+
+    var card = createCard();
+    var invoice = InvoiceEntity.create(card, month, clock);
+
+    assertThat(invoice.getIsPaid()).isFalse();
+  }
+
+  @Test
+  @DisplayName("Should create paid invoice when current date is after closing date")
+  void testCreatePaidInvoiceAfterClosingDate() {
+    var clock = createClock();
+    var month = YearMonth.now(clock).minusMonths(1); // Previous month
+
+    var card = createCard();
+    var invoice = InvoiceEntity.create(card, month, clock);
+
+    assertThat(invoice.getIsPaid()).isTrue();
+  }
+
+  @Test
+  @DisplayName("Should create invoice with zero amount")
+  void testCreateInvoiceWithZeroAmount() {
+    var clock = createClock();
+    var month = YearMonth.now(clock); // Current month
+
+    var card = createCard();
+    var invoice = InvoiceEntity.create(card, month, clock);
+
+    assertThat(invoice.getAmount()).isEqualTo(BigDecimal.ZERO);
+  }
+
+  @Test
+  @DisplayName("Should throw NullPointerException when card is null")
+  void testCreateInvoiceWithNullCard() {
+    var clock = createClock();
+    var month = YearMonth.now(clock); // Current month
+
+    assertThatNullPointerException()
+      .isThrownBy(() -> InvoiceEntity.create(null, month, clock))
+      .withMessage("'card' cannot be null");
+  }
+
+  @Test
+  @DisplayName("Should throw NullPointerException when month is null")
+  void testCreateInvoiceWithNullMonth() {
+    var clock = createClock();
+    var card = createCard();
+
+    assertThatNullPointerException()
+      .isThrownBy(() -> InvoiceEntity.create(card, null, clock))
+      .withMessage("'yearMonth' cannot be null");
+  }
+
+  @Test
+  @DisplayName("Should throw NullPointerException when clock is null")
+  void testCreateInvoiceWithNullClock() {
+    var card = createCard();
+    var clock = createClock();
+    var month = YearMonth.now(clock); // Current month
+
+    assertThatNullPointerException()
+      .isThrownBy(() -> InvoiceEntity.create(card, month, null))
+      .withMessage("'clock' cannot be null");
+  }
+
   private Clock createClock() {
     var timeZone = Clock.systemDefaultZone().getZone();
     var instant = CURRENT_DATE_TIME.atZone(timeZone).toInstant();
@@ -42,12 +114,16 @@ public class InvoiceEntityTest {
     return Clock.fixed(instant, timeZone);
   }
 
+  private InvoiceEntity createInvoiceEntity(CardEntity card, YearMonth month, Clock clock) {
+    return InvoiceEntity.create(card, month, clock);
+  }
+
   private CardEntity createCard() {
     return CardEntity.builder()
-        .id(1L)
-        .name("Valid card name")
-        .closingDay(CLOSING_DAY)
-        .paymentDay(PAYMENT_DAY)
-        .build();
+      .id(1L)
+      .name("Valid card name")
+      .closingDay(CLOSING_DAY)
+      .paymentDay(PAYMENT_DAY)
+      .build();
   }
 }

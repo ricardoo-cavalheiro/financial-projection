@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.List;
 import java.util.Objects;
 
@@ -31,30 +32,32 @@ public class InvoiceEntity {
   private CardEntity card;
   private List<ExpenseEntity> expenses;
 
-  public static InvoiceEntity create(CardEntity card, Integer month, Clock clock) {
+  public static InvoiceEntity create(CardEntity card, YearMonth yearMonth, Clock clock) {
     Objects.requireNonNull(card, "'card' cannot be null");
-    Objects.requireNonNull(month, "'month' cannot be null");
+    Objects.requireNonNull(yearMonth, "'yearMonth' cannot be null");
+    Objects.requireNonNull(clock, "'clock' cannot be null");
 
-    var currentDateTime = LocalDateTime.now(clock).plusMonths(month);
-    var currentDate = currentDateTime.toLocalDate();
-    var maxDayInMonth = currentDate.lengthOfMonth();
+    var maxDayInMonth = yearMonth.lengthOfMonth();
 
     var safeClosingDay = Math.min(card.getClosingDay(), maxDayInMonth);
     var safePaymentDay = Math.min(card.getPaymentDay(), maxDayInMonth);
-    var closingDate = currentDate.withDayOfMonth(safeClosingDay);
-    var paymentDate = currentDate.withDayOfMonth(safePaymentDay);
+    var closingDate = yearMonth.atDay(safeClosingDay);
+    var paymentDate = yearMonth.atDay(safePaymentDay);
 
-    var isPaid = isInvoicePaid(currentDate, closingDate, month);
+    var currentDateTime = LocalDateTime.now(clock);
+    var currentDate = currentDateTime.toLocalDate();
+
+    var isPaid = isInvoicePaid(currentDate, closingDate);
 
     return InvoiceEntity.builder()
-        .card(card)
-        .amount(BigDecimal.ZERO)
-        .closingDate(closingDate)
-        .paymentDate(paymentDate)
-        .wasManuallyAdded(Boolean.FALSE)
-        .isPaid(isPaid)
-        .createdAt(currentDateTime)
-        .build();
+      .card(card)
+      .amount(BigDecimal.ZERO)
+      .closingDate(closingDate)
+      .paymentDate(paymentDate)
+      .wasManuallyAdded(Boolean.FALSE)
+      .isPaid(isPaid)
+      .createdAt(currentDateTime)
+      .build();
   }
 
   public BigDecimal sumExpenses() {
@@ -67,10 +70,10 @@ public class InvoiceEntity {
     }
 
     return expenses.stream()
-        .filter(expense -> !expense.getIsIgnored())
-        .filter(expense -> expense.getPaymentType().equals(PaymentTypeEnum.CREDIT))
-        .map(ExpenseEntity::getAmount)
-        .reduce(BigDecimal.ZERO, BigDecimal::add);
+      .filter(expense -> !expense.getIsIgnored())
+      .filter(expense -> expense.getPaymentType().equals(PaymentTypeEnum.CREDIT))
+      .map(ExpenseEntity::getAmount)
+      .reduce(BigDecimal.ZERO, BigDecimal::add);
   }
 
   public void updateAmount(BigDecimal newAmount) {
@@ -86,11 +89,9 @@ public class InvoiceEntity {
     setIsPaid(isPaid);
   }
 
-  private static Boolean isInvoicePaid(LocalDate currentDate, LocalDate closingDate, Integer month) {
-    if (month < 1 && closingDate.isBefore(currentDate)) {
-      return true;
-    } else {
-      return false;
-    }
+  private static Boolean isInvoicePaid(LocalDate currentDate, LocalDate closingDate) {
+    return closingDate.isBefore(currentDate) || closingDate.isEqual(currentDate) 
+      ? Boolean.TRUE 
+      : Boolean.FALSE;
   }
 }

@@ -3,6 +3,7 @@ package com.example.financial_app.services;
 import java.math.BigDecimal;
 import java.time.Clock;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,8 +38,15 @@ public class InvoiceService implements IInvoiceService {
     var card = cardService.getCard(cardName);
 
     var invoices = new ArrayList<InvoiceEntity>();
-    for (int monthOffset = 0; monthOffset <= months; monthOffset++)
-      invoices.add(InvoiceEntity.create(card, monthOffset, clock));
+    for (int monthOffset = 0; monthOffset <= months; monthOffset++) {
+      var invoice = InvoiceEntity.create(
+        card, 
+        YearMonth.now().plusMonths(monthOffset), 
+        clock
+      );
+
+      invoices.add(invoice);
+    }
 
     invoiceRepository.saveAll(invoices);
   }
