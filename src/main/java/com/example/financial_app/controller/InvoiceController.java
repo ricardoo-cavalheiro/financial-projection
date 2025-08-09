@@ -28,10 +28,9 @@ public class InvoiceController {
   @Command(command = "set-invoice-paid", description = "Set an invoice as paid.")
   public void setInvoicePaid(
     @Option(required = true) String cardName,
-    @Option(required = true) LocalDate closingDate,
-    @Option(required = true) Boolean isPaid
+    @Option(required = true) LocalDate closingDate
   ) {
-    invoiceService.setInvoicePaid(cardName, closingDate, isPaid);
+    invoiceService.setInvoicePaid(cardName, closingDate);
   }
 
   @Command(command = "update-invoice-amount", description = "Update the amount of an invoice.")

@@ -14,8 +14,7 @@ public interface IInvoiceService {
 
   public void setInvoicePaid(
     String cardName,
-    LocalDate closingDate,
-    Boolean isPaid
+    LocalDate closingDate
   );
 
   public List<InvoiceEntity> getInvoices(String cardName, Integer months);

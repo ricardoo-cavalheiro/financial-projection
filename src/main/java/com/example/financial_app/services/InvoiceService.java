@@ -53,20 +53,19 @@ public class InvoiceService implements IInvoiceService {
 
   public void setInvoicePaid(
     String cardName,
-    LocalDate closingDate,
-    Boolean isPaid
+    LocalDate closingDate
   ) {
-    log.info("Setting invoice closing date {} as paid: {}", closingDate, isPaid);
+    log.info("Setting invoice closing date {} as paid", closingDate);
 
     var card = cardService.getCard(cardName);
 
     var invoice = invoiceRepository.findByClosingDateAndCardName(closingDate, card.getName())
         .orElseThrow(() -> new IllegalArgumentException("Invoice not found with closing date: " + closingDate));
 
-    invoice.setAsPaid(isPaid);
+    invoice.setAsPaid();
     invoiceRepository.save(invoice);
 
-    log.info("Invoice with closing date {} updated successfully. Is Paid: {}", closingDate, isPaid);
+    log.info("Invoice with closing date {} updated successfully", closingDate);
   }
 
   public List<InvoiceEntity> getInvoices(String cardName, Integer months) {

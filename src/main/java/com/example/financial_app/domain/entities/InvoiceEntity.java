@@ -44,6 +44,10 @@ public class InvoiceEntity {
     var closingDate = yearMonth.atDay(safeClosingDay);
     var paymentDate = yearMonth.atDay(safePaymentDay);
 
+    if (paymentDate.isBefore(closingDate)) {
+      paymentDate = paymentDate.plusMonths(1);
+    }
+
     var currentDateTime = LocalDateTime.now(clock);
     var currentDate = currentDateTime.toLocalDate();
 
@@ -79,14 +83,16 @@ public class InvoiceEntity {
   public void updateAmount(BigDecimal newAmount) {
     Objects.requireNonNull(newAmount, "'newAmount' cannot be null");
 
+    if (newAmount.compareTo(BigDecimal.ZERO) < 0) {
+      throw new IllegalArgumentException("'newAmount' must be greater than or equal to zero");
+    }
+
     setAmount(newAmount);
     setWasManuallyAdded(Boolean.TRUE);
   }
 
-  public void setAsPaid(Boolean isPaid) {
-    Objects.requireNonNull(isPaid, "'isPaid' cannot be null");
-
-    setIsPaid(isPaid);
+  public void setAsPaid() {
+    setIsPaid(Boolean.TRUE);
   }
 
   private static Boolean isInvoicePaid(LocalDate currentDate, LocalDate closingDate) {

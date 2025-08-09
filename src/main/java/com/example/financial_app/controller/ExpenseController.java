@@ -49,7 +49,7 @@ public class ExpenseController {
     String expenseName,
     @Option(required = true) @Min(0) BigDecimal amount,
     @Option(required = true) @Min(1) @Max(31) Integer paymentDay,
-    @Option(required = false) 
+    @Option(required = true) 
     @Size(min = 3, max = 20, message = "Invalid card name. Name must be between 3 and 20 characters.") 
     String cardName,
     @Option(required = false) @Min(1) Integer totalInstallments,
@@ -72,7 +72,7 @@ public class ExpenseController {
     String expenseName,
     @Option(required = true) @Min(0) BigDecimal amount,
     @Option(required = true) LocalDate paymentDate,
-    @Option(required = false) 
+    @Option(required = true) 
     @Size(min = 3, max = 20, message = "Invalid card name. Name must be between 3 and 20 characters.") 
     String cardName
   ) {
