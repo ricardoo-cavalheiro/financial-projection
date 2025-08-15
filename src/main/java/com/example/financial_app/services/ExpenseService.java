@@ -1,6 +1,7 @@
 package com.example.financial_app.services;
 
 import java.math.BigDecimal;
+import java.time.Clock;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.ArrayList;
@@ -13,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.financial_app.domain.dao.IExpenseRepository;
 import com.example.financial_app.domain.entities.ExpenseEntity;
-import com.example.financial_app.domain.enums.PaymentTypeEnum;
 import com.example.financial_app.domain.services.IExpenseService;
 import com.example.financial_app.domain.services.IInvoiceService;
 
@@ -25,6 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 public class ExpenseService implements IExpenseService {
+  private final Clock clock;
   private final CardService cardService;
   private final IInvoiceService invoiceService;
   private final IExpenseRepository expenseRepository;
@@ -39,16 +40,16 @@ public class ExpenseService implements IExpenseService {
 
     var expenses = new ArrayList<ExpenseEntity>();
     for (int monthOffset = 0; monthOffset < 12; monthOffset++) {
-      var currentIterationPaymentDate = LocalDate.now()
+      var currentIterationPaymentDate = LocalDate.now(clock)
         .plusMonths(monthOffset)
         .withDayOfMonth(paymentDay);
 
-      var expense = ExpenseEntity.create(
+      var expense = ExpenseEntity.createDebit(
         expenseName, 
         amount, 
         currentIterationPaymentDate, 
-        PaymentTypeEnum.DEBIT, 
-        Boolean.TRUE
+        Boolean.TRUE,
+        clock
       );
 
       expenses.add(expense);
@@ -67,12 +68,12 @@ public class ExpenseService implements IExpenseService {
   ) {
     log.info("Adding one-time debit expense with name: {}, amount: {}, payment date: {}", expenseName, amount, paymentDate);
 
-    var expense = ExpenseEntity.create(
+    var expense = ExpenseEntity.createDebit(
       expenseName, 
       amount, 
       paymentDate,
-      PaymentTypeEnum.DEBIT, 
-      Boolean.FALSE
+      Boolean.FALSE,
+      clock
     );
 
     expenseRepository.save(expense);
@@ -82,26 +83,27 @@ public class ExpenseService implements IExpenseService {
 
   @Override
   public void addRecurringCreditExpense(
-      String expenseName,
-      BigDecimal amount,
-      Integer paymentDay, 
-      String cardName,
-      Integer totalInstallments,
-      Integer installmentNumber) {
+    String expenseName,
+    BigDecimal amount,
+    Integer paymentDay, 
+    String cardName,
+    Integer totalInstallments,
+    Integer installmentNumber
+  ) {
     log.info(
         "Adding expense for the next 12 months with name: {}, amount: {}, payment day: {}",
         expenseName, amount, paymentDay);
 
     var card = cardService.getCard(cardName);
 
-    var currentDate = LocalDate.now();
+    var currentDate = LocalDate.now(clock);
     var expenses = new ArrayList<ExpenseEntity>();
 
     var monthsChecked = 0;
     var installmentsAdded = 0;
     while (installmentsAdded < totalInstallments) {
-      var currentIterationMonth = currentDate.withDayOfMonth(paymentDay).plusMonths(monthsChecked);
-      var currentIterationInvoiceDate = currentIterationMonth.withDayOfMonth(card.getClosingDay());
+      var currentIterationDate = currentDate.withDayOfMonth(paymentDay).plusMonths(monthsChecked);
+      var currentIterationInvoiceDate = currentIterationDate.withDayOfMonth(card.getClosingDay());
       var currentMonthInvoice = invoiceService.getInvoiceByClosingDateAndCardName(currentIterationInvoiceDate, cardName);
 
       if (currentMonthInvoice.getIsPaid()) {
@@ -116,19 +118,14 @@ public class ExpenseService implements IExpenseService {
         break; // No need to add expense if it's the last installment
       }
 
-      var expense = ExpenseEntity.builder()
-          .description(expenseName)
-          .amount(amount)
-          .paymentType(PaymentTypeEnum.CREDIT)
-          .isRecurring(Boolean.TRUE)
-          .isIgnored(Boolean.FALSE)
-          .card(card)
-          .invoice(currentMonthInvoice)
-          .isPaid(currentIterationMonth.isBefore(currentDate) || currentIterationMonth.isEqual(currentDate))
-          .paymentDate(currentIterationMonth)
-          .totalInstallments(totalInstallments)
-          .installmentNumber(installmentNumberForCurrentIteration)
-          .build();
+      var expense = ExpenseEntity.createCredit(
+          expenseName, 
+          amount, 
+          currentIterationDate,
+          Boolean.TRUE,
+          card,
+          currentMonthInvoice,
+          clock);
 
       expenses.add(expense);
       installmentsAdded++;
@@ -142,37 +139,36 @@ public class ExpenseService implements IExpenseService {
 
   @Override
   public void addOneTimeCreditExpense(
-      String expenseName,
-      BigDecimal amount,
-      LocalDate paymentDate,
-      String cardName) {
+    String expenseName,
+    BigDecimal amount,
+    LocalDate paymentDate,
+    String cardName
+  ) {
     log.info("Adding one-time credit expense with name: {}, amount: {}, payment date: {}", expenseName, amount, paymentDate);
 
-    var currentDate = LocalDate.now();
     var card = cardService.getCard(cardName);
+    var currentMonthInvoiceDate = LocalDate.now(clock).withDayOfMonth(card.getClosingDay());
+
     var currentMonthInvoice = invoiceService.getInvoiceByClosingDateAndCardName(
-      currentDate.withDayOfMonth(card.getClosingDay()),
+      currentMonthInvoiceDate,
       cardName
     );
 
     if (currentMonthInvoice.getIsPaid()) {
       currentMonthInvoice = invoiceService.getInvoiceByClosingDateAndCardName(
-        currentDate.plusMonths(1).withDayOfMonth(card.getClosingDay()),
+        currentMonthInvoiceDate.plusMonths(1),
         cardName
       );
     }
 
-    var expense = ExpenseEntity.builder()
-        .description(expenseName)
-        .amount(amount)
-        .paymentType(PaymentTypeEnum.CREDIT)
-        .isRecurring(Boolean.FALSE)
-        .isIgnored(Boolean.FALSE)
-        .card(card)
-        .invoice(currentMonthInvoice)
-        .isPaid(paymentDate.isBefore(currentDate) || paymentDate.isEqual(currentDate))
-        .paymentDate(paymentDate)
-        .build();
+    var expense = ExpenseEntity.createCredit(
+      expenseName, 
+      amount, 
+      paymentDate,
+      Boolean.FALSE,
+      card,
+      currentMonthInvoice,
+      clock);
 
     expenseRepository.save(expense);
 
@@ -183,7 +179,7 @@ public class ExpenseService implements IExpenseService {
   public List<ExpenseEntity> getDebitExpenses(Integer months) {
     log.info("Retrieving all debit expenses for the next {} months.", months);
 
-    var currentDate = LocalDate.now();
+    var currentDate = LocalDate.now(clock);
     var startDate = YearMonth.from(currentDate).atDay(1);
     var endDate = YearMonth.from(currentDate).atEndOfMonth();
     var debitExpenses = expenseRepository.findAllDebitExpenses(

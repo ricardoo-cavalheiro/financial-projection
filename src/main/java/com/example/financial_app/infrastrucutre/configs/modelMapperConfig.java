@@ -2,6 +2,7 @@ package com.example.financial_app.infrastrucutre.configs;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
 import org.modelmapper.ModelMapper;
 
 @Configuration
